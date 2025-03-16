@@ -26,6 +26,22 @@ export default {
     updateReps() {
       this.$emit("update-reps", this.reps);
     },
+    // 入力を半角数字のみ許可するバリデーション
+    validateInput(field){
+      // 入力された値が半角数字のみでない場合、削除する
+      if (field === 'sets') {
+        this.sets = this.sets.replace(/[^0-9]/g, '');
+      } else if (field === 'weight') {
+        this.weight = this.weight.replace(/[^0-9.]/g, '');
+      } else if (field === 'reps') {
+        this.reps = this.reps.replace(/[^0-9]/g, '');
+      }
+    },
+    // 重量と回数の初期化
+    clearWeightSetslData() {
+      this.weight = '';
+      this.reps = '';
+    },
   }
 }
 </script>

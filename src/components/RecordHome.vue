@@ -3,10 +3,10 @@
     <h1>記録</h1>
     <div>
       <p>日付</p>
-      <input type="date" v-model="todayDate">
+      <input type="date" v-model="createDate">
     </div>
     <div v-for="(record, index) in recordLists" :key="index">
-      <record-detail :todayDate=todayDate ref="child" @update-array="handleArrayUpdate"></record-detail>
+      <record-detail :createDate=createDate ref="child" @update-array="handleArrayUpdate"></record-detail>
     </div>
     <div v-if="recordLists.length > 1">
       <button @click="deleteRecord">レコード削除</button>
@@ -17,7 +17,6 @@
     <div>
       <button @click="submitRecord">送信</button>
     </div>
-    <!-- <button @click="parentTest">親テスト</button> -->
   </div>
 </template>
 
@@ -32,12 +31,14 @@ export default {
   },
   data() {
     return {
-      // 本日の日付を「yyyy-mm-dd」形式で設定
-      todayDate: new Date().toISOString().split('T')[0],
+      // 日付を「yyyy-mm-dd」形式で設定
+      createDate: new Date().toISOString().split('T')[0],
       // 記録フォームのリスト
       recordLists: [1],
       // フォームデータのリスト
       formDataList: [],
+      // 入力チェック判定
+      inputCheck: false,
     }
   },
   methods: {
@@ -51,52 +52,53 @@ export default {
     },
     // 記録を登録する
     async submitRecord(){
-      console.log("----- 送信ボタン -----");
       // 全ての子コンポーネントをループ
       this.$refs.child.forEach(child => {
         if (child && child.setRecordDetailData){
           // 子コンポーネントのsetRecordDetailData()を呼び出す
-          child.setRecordDetailData();
+          this.inputCheck = child.setRecordDetailData();
+          if (this.inputCheck){
+            // forEachから処理を抜ける
+            return;
+          }
         }
       });
 
-      let formData = new FormData();
-      this.formDataList.forEach(item => {
-        // オブジェクトをJSON形式に変換
+      if (this.inputCheck){
+        // 未入力項目あり
+        return;
+      }
+
+      for (const item of this.formDataList) {
+        let formData = new FormData();
         formData.append('record', JSON.stringify(item));
-      });
-
-      this.$axios.post(FUNCTIONS_URL.POST_RECORD, formData, {
-        Headers :{
-          "Content-Type": "multipart/form-data"
+        try{
+          const response = await this.$axios.post(FUNCTIONS_URL.POST_RECORD, formData, {
+            headers :{
+              Authorization: FUNCTIONS_URL.AUTHORIZATION,
+              "Content-Type": "application/json",
+            }
+          });
+          console.log("success!", response.data);
+        }catch(err){
+          console.log(err);
         }
-      })
-      .then(console.log("送信成功！"))
-      .catch((err) =>{
-        console.log(err);
-      })
+      }
+
+      // 全ての子コンポーネントをループ
+      this.$refs.child.forEach(child => {
+        if (child && child.clearRecordDetailData){
+          // 子コンポーネントのclearRecordDetailData()を呼び出す
+          child.clearRecordDetailData();
+        }
+      });
+      this.formDataList = []; // formDataListを初期化
+      this.inputCheck = false; // inputCheckを初期化
     },
     // 子から受け取った配列を親で保持する
     handleArrayUpdate(newArray) {
       this.formDataList.push(newArray);
     },
-    parentTest() {
-      // 全ての子コンポーネントをループ
-      this.$refs.child.forEach(child => {
-        if (child && child.setRecordDetailData){
-          // 子コンポーネントのsetRecordDetailData()を呼び出す
-          child.setRecordDetailData();
-        }
-      });
-      console.log('--- parentTest() ---');
-      console.log('親のリスト', this.formDataList);
-      console.log('長さ', this.formDataList.length);
-
-      let formData = new FormData();
-      this.formDataList.forEach(item => {
-        formData.append('record', item);
-      });
-    }
   }
 }
 </script>

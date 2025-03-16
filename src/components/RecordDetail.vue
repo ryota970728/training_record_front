@@ -11,27 +11,26 @@
     <div>
        <select v-model="selectedMenu">
         <option disabled value="">選択してください</option>
-        <option v-for="(menu, index) in menuList[selectedPart]" :key="index" :value="menu">
-          {{ menu }}
+        <option v-for="menu in filteredMenuList" :key="menu.menu_id" :value="menu.menu_name">
+          {{ menu.menu_name }}
         </option>
        </select>
     </div>
     <!-- セット数 -->
     <div>
-      <label>セット数：</label><input type="number" v-model="sets" @input="updateSets">
+      <label>セット数：</label><input type="number" v-model="setCount" @input="updateSets">
     </div>
-    <div v-for="(value, index) in weightSetsList" :key="index">
+    <div v-for="(value, index) in setCountList" :key="index">
       <weight-sets
-      :weight="value.weight"
-      :reps="value.reps"
       @update-weight="updateWeight($event, index)"
       @update-reps="updateReps($event, index)"
+      ref="child"
       ></weight-sets>
     </div>
     <div>
       <label>備考欄：</label><textarea v-model="note"></textarea>
     </div>
-    <!-- <button @click="childTest">子テスト</button> -->
+
   </div>
 </template>
 
@@ -45,7 +44,7 @@ export default {
     WeightSets,
   },
   props: {
-    todayDate: String
+    createDate: String
   },
   data() {
     return {
@@ -58,20 +57,16 @@ export default {
       ],
       // ラジオボタンで選択された部位ID（デフォルトあり）
       selectedPart: 1,
-      // セット数
-      sets: 3,
-      // 重量
-      weight: '',
-      // 回数
-      reps: '',
       // 種目の一覧
-      menuList: {},
+      menuList: [],
       // プルダウンで選択された種目名
       selectedMenu: '',
+      // セット数
+      setCount: 3,
+      // セット数リスト
+      setCountList: [],
       // 備考欄
       note: '',
-      // 各セットのデータ（重量と回数）
-      weightSetsList: [],
       // 重量リスト
       weightList: [],
       // 回数リスト
@@ -80,7 +75,7 @@ export default {
   },
   mounted(){
     this.getMenu();
-    this.updateSets(); // 初期化時に `sets` の数だけ配列を作成
+    this.updateSets(); // 初期化時に `setCount` の数だけ配列を作成
   },
   watch: {
     // selectedPartが変更されるたびにメニューをリセット
@@ -88,21 +83,20 @@ export default {
       this.selectedMenu = '';  // 新しく選択された部位に関連するメニューをリセット
     }
   },
-  methods: {
-    // 入力を半角数字のみ許可するバリデーション
-    validateInput(field){
-      // 入力された値が半角数字のみでない場合、削除する
-      if (field === 'sets') {
-        this.sets = this.sets.replace(/[^0-9]/g, '');
-      } else if (field === 'weight') {
-        this.weight = this.weight.replace(/[^0-9.]/g, '');
-      } else if (field === 'reps') {
-        this.reps = this.reps.replace(/[^0-9]/g, '');
-      }
+  computed: {
+    // 選択された部位に紐づくメニューリストを返す
+    filteredMenuList() {
+      return this.menuList.filter(menu => menu.part_id === this.selectedPart);
     },
-    /// 種目一覧を取得する関数
+  },
+  methods: {
+    // 種目一覧を取得する関数
     getMenu(){
-      this.$axios.get(FUNCTIONS_URL.GET_MENU)
+      this.$axios.get(FUNCTIONS_URL.GET_MENU,{
+        headers: {
+          Authorization: FUNCTIONS_URL.AUTHORIZATION,
+        },
+      })
       .then((res) =>{
         this.menuList = res.data;
       }).catch((err) =>{
@@ -111,40 +105,76 @@ export default {
     },
     // セットを更新
     updateSets() {
-      // `sets` の値に応じて weightSetsList の配列を調整
-      const newSets = Number(this.sets);
-      if (newSets > this.weightSetsList.length) {
+      // `setCount` の値に応じて setCountList の配列を調整
+      const newSets = Number(this.setCount);
+      if (newSets > this.setCountList.length) {
         // 増やす場合、新しいセットを追加
-        for (let i = this.weightSetsList.length; i < newSets; i++) {
-          this.weightSetsList.push({ weight: 0, reps: 0 });
+        for (let i = this.setCountList.length; i < newSets; i++) {
+          this.setCountList.push(i);
         }
       } else {
         // 減らす場合、不要なセットを削除
-        this.weightSetsList = this.weightSetsList.slice(0, newSets);
+        this.setCountList = this.setCountList.slice(0, newSets);
       }
     },
+    // 重量を更新
     updateWeight(newWeight, index) {
       // 特定のセットの重量を更新
       this.weightList[index] = newWeight;
     },
+    // 回数を更新
     updateReps(newReps, index) {
       // 特定のセットの回数を更新
       this.repsList[index] = newReps;
     },
     // 「送信」ボタンが押下された際に動く関数
     setRecordDetailData() {
+      // 入力チェック
+      if (!this.selectedMenu) {
+        alert('種目を選択してください');
+        return true;
+      }
+      if (!this.setCount || this.setCount === '0') {
+        alert('セット数を入力してください');
+        return true;
+      }
+      for (let i = 0; i < this.setCountList.length; i++) {
+        if (!this.weightList[i] || !this.repsList[i]) {
+          alert('重量と回数を入力してください');
+          return true;
+        }
+      }
       const newData = {
         partId: this.selectedPart,
         menuName: this.selectedMenu,
-        setCount: this.sets,
+        setCount: this.setCount,
         weight: this.weightList,
         reps: this.repsList,
-        createDate: this.todayDate,
+        createDate: this.createDate,
         note: this.note
       };
       // 親のデータを更新
       this.$emit('update-array', newData);
     },
+    // 入力フォームの初期化
+    clearRecordDetailData(){
+      this.selectedPart = 1;
+      this.selectedMenu = '';
+      this.setCount = 3;
+      this.note = '';
+      this.setCountList = []; // setCountList を空の配列に初期化
+      this.weightList = []; // weightList を空の配列に初期化
+      this.repsList = [];   // repsList を空の配列に初期化
+      this.updateSets(); // 初期化時に `setCount` の数だけ配列を作成
+
+      // 全ての子コンポーネントをループ
+      this.$refs.child.forEach(child => {
+        if (child && child.clearWeightSetslData){
+          // 子コンポーネントのclearWeightSetslData()を呼び出す
+          child.clearWeightSetslData();
+        }
+      });
+    }
   }
 }
 </script>
