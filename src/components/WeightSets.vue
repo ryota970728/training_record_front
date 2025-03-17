@@ -49,9 +49,10 @@ export default {
 <style scoped>
 .weightBox {
   margin: 5px 3px 5px 0px;
+  width: 50px;
 }
 .repsBox{
   margin: 5px 3px 5px 10px;
-
+  width: 50px;
 }
 </style>

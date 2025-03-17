@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="record-home">
     <h1>記録</h1>
-    <div>
+    <div class="date">
       <p>日付</p>
       <input type="date" v-model="createDate">
     </div>

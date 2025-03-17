@@ -18,7 +18,7 @@
     </div>
     <!-- セット数 -->
     <div>
-      <label>セット数：</label><input type="number" v-model="setCount" @input="updateSets">
+      <label>セット数：</label><input class="set-count" type="number" v-model="setCount" @input="updateSets">
     </div>
     <div v-for="(value, index) in setCountList" :key="index">
       <weight-sets
@@ -53,7 +53,8 @@ export default {
         { id: 1, name: "胸" },
         { id: 2, name: "肩" },
         { id: 3, name: "背中" },
-        { id: 4, name: "腕" }
+        { id: 4, name: "上腕二頭" },
+        { id: 5, name: "上腕三頭" },
       ],
       // ラジオボタンで選択された部位ID（デフォルトあり）
       selectedPart: 1,
@@ -181,4 +182,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.set-count{
+  width: 50px;
+}
 </style>
