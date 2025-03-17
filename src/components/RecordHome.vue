@@ -65,9 +65,9 @@ export default {
       this.recordLists.pop();
     },
     // 部位一覧を取得する関数
-    async fetchPart() {
+    fetchPart() {
       if (this.partList.length === 0) {
-        await this.$axios.get(FUNCTIONS_URL.GET_PART,{
+        this.$axios.get(FUNCTIONS_URL.GET_PART,{
           headers: {
             Authorization: FUNCTIONS_URL.AUTHORIZATION,
           },
@@ -80,9 +80,9 @@ export default {
       }
     },
     // 種目一覧を取得する関数
-    async fetchMenu(){
+    fetchMenu(){
       if (this.menuList.length === 0) {
-        await this.$axios.get(FUNCTIONS_URL.GET_MENU,{
+        this.$axios.get(FUNCTIONS_URL.GET_MENU,{
           headers: {
             Authorization: FUNCTIONS_URL.AUTHORIZATION,
           },
