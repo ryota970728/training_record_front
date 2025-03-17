@@ -2,9 +2,9 @@
   <div>
     <!-- 部位 -->
     <div>
-      <label v-for="part in parts" :key="part.id">
-        <input type="radio" v-model="selectedPart" :value="part.id">
-        {{ part.name }}
+      <label v-for="part in partList" :key="part.part_id">
+        <input type="radio" v-model="selectedPart" :value="part.part_id">
+        {{ part.part_name }}
       </label>
     </div>
     <!-- 種目 -->
@@ -36,7 +36,6 @@
 
 <script>
 import WeightSets from "./WeightSets.vue";
-import { FUNCTIONS_URL } from "@/Constant.js";
 
 export default {
   name: "RecordDetail",
@@ -44,22 +43,14 @@ export default {
     WeightSets,
   },
   props: {
-    createDate: String
+    createDate: String,
+    partList: Array,
+    menuList: Array,
   },
   data() {
     return {
-      // 部位の一覧
-      parts: [
-        { id: 1, name: "胸" },
-        { id: 2, name: "肩" },
-        { id: 3, name: "背中" },
-        { id: 4, name: "上腕二頭" },
-        { id: 5, name: "上腕三頭" },
-      ],
       // ラジオボタンで選択された部位ID（デフォルトあり）
       selectedPart: 1,
-      // 種目の一覧
-      menuList: [],
       // プルダウンで選択された種目名
       selectedMenu: '',
       // セット数
@@ -75,7 +66,6 @@ export default {
     }
   },
   mounted(){
-    this.getMenu();
     this.updateSets(); // 初期化時に `setCount` の数だけ配列を作成
   },
   watch: {
@@ -91,19 +81,6 @@ export default {
     },
   },
   methods: {
-    // 種目一覧を取得する関数
-    getMenu(){
-      this.$axios.get(FUNCTIONS_URL.GET_MENU,{
-        headers: {
-          Authorization: FUNCTIONS_URL.AUTHORIZATION,
-        },
-      })
-      .then((res) =>{
-        this.menuList = res.data;
-      }).catch((err) =>{
-        console.log(err);
-      })
-    },
     // セットを更新
     updateSets() {
       // `setCount` の値に応じて setCountList の配列を調整

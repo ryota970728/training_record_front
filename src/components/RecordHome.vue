@@ -2,11 +2,17 @@
   <div class="record-home">
     <h1>記録</h1>
     <div class="date">
-      <p>日付</p>
+      <label>日付：</label>
       <input type="date" v-model="createDate">
     </div>
     <div v-for="(record, index) in recordLists" :key="index">
-      <record-detail :createDate=createDate ref="child" @update-array="handleArrayUpdate"></record-detail>
+      <record-detail
+      :createDate=createDate
+      :partList="partList"
+      :menuList="menuList"
+      ref="child"
+      @update-array="handleArrayUpdate"
+      ></record-detail>
     </div>
     <div v-if="recordLists.length > 1">
       <button @click="deleteRecord">レコード削除</button>
@@ -39,7 +45,15 @@ export default {
       formDataList: [],
       // 入力チェック判定
       inputCheck: false,
+      // 部位の一覧
+      partList: [],
+      // 種目の一覧
+      menuList: [],
     }
+  },
+  mounted() {
+    this.fetchPart();
+    this.fetchMenu();
   },
   methods: {
     // レコードを追加
@@ -49,6 +63,36 @@ export default {
     // レコードを削除
     deleteRecord() {
       this.recordLists.pop();
+    },
+    // 部位一覧を取得する関数
+    async fetchPart() {
+      if (this.partList.length === 0) {
+        await this.$axios.get(FUNCTIONS_URL.GET_PART,{
+          headers: {
+            Authorization: FUNCTIONS_URL.AUTHORIZATION,
+          },
+        })
+        .then((res) =>{
+          this.partList = res.data;
+        }).catch((err) =>{
+          console.log(err);
+        })
+      }
+    },
+    // 種目一覧を取得する関数
+    async fetchMenu(){
+      if (this.menuList.length === 0) {
+        await this.$axios.get(FUNCTIONS_URL.GET_MENU,{
+          headers: {
+            Authorization: FUNCTIONS_URL.AUTHORIZATION,
+          },
+        })
+        .then((res) =>{
+          this.menuList = res.data;
+        }).catch((err) =>{
+          console.log(err);
+        })
+      }
     },
     // 記録を登録する
     async submitRecord(){
@@ -82,9 +126,10 @@ export default {
           console.log("success!", response.data);
         }catch(err){
           console.log(err);
+          alert('送信失敗!');
         }
       }
-
+      alert('送信成功!');
       // 全ての子コンポーネントをループ
       this.$refs.child.forEach(child => {
         if (child && child.clearRecordDetailData){

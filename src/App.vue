@@ -1,17 +1,15 @@
 <template>
   <div id="app">
-    <record-home></record-home>
+    <router-link to="/">記録</router-link>|
+    <router-link to="confirm">記録一覧</router-link>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import RecordHome from './components/RecordHome.vue';
 
 export default {
   name: 'App',
-  components: {
-    RecordHome,
-  }
 }
 </script>
 
