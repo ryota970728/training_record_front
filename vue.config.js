@@ -4,5 +4,11 @@ module.exports = defineConfig({
 })
 module.exports = {
   publicPath: '/',
-  outputDir: 'docs'
+  outputDir: 'docs',
+  configureWebpack: {
+    output: {
+      filename: 'js/[name].[hash].js',
+      chunkFilename: 'js/[name].[hash].js'
+    }
+  }
 }
