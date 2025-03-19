@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import { createWebHashHistory } from 'vue-router';
+
 
 import RecordHome from '../components/RecordHome.vue';
 import RecordConfirm from '../components/RecordConfirm.vue';
@@ -29,8 +31,8 @@ const routes = [
 ];
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.NODE_ENV === 'production' ? '/training_record_front/' : '/',
+  mode: createWebHashHistory(),
+  base: '',
   routes
 })
 
