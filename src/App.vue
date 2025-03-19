@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-link to="/">記録</router-link>|
+    <router-link to="/record">記録</router-link>|
     <router-link to="confirm">記録一覧</router-link>
     <router-view></router-view>
   </div>
