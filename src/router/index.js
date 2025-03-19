@@ -22,6 +22,10 @@ const routes = [
     name: 'RecordConfirm',
     component: RecordConfirm
   },
+  {
+    path: '*',
+    redirect: '/record'
+  }
 ];
 
 const router = new VueRouter({
