@@ -10,19 +10,23 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
+    redirect: {name: 'RecordHome'}
+  },
+  {
+    path: '/record',
     name: 'RecordHome',
     component: RecordHome
   },
   {
     path: '/confirm',
-     name: 'RecordConfirm',
+    name: 'RecordConfirm',
     component: RecordConfirm
   },
 ];
 
 const router = new VueRouter({
   mode: 'history',
-  base: '/',
+  base: process.env.BASE_URL,
   routes
 })
 
