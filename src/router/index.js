@@ -1,7 +1,5 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import { createWebHashHistory } from 'vue-router';
-
 
 import RecordHome from '../components/RecordHome.vue';
 import RecordConfirm from '../components/RecordConfirm.vue';
@@ -31,7 +29,7 @@ const routes = [
 ];
 
 const router = new VueRouter({
-  mode: createWebHashHistory(),
+  mode: 'hash',
   base: '',
   routes
 })
