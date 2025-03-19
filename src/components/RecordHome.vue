@@ -54,8 +54,6 @@ export default {
   mounted() {
     this.fetchPart();
     this.fetchMenu();
-    console.log('NODE_ENV:', process.env.NODE_ENV);
-    console.log('BASE_URL:', process.env.BASE_URL);
   },
   methods: {
     // レコードを追加
