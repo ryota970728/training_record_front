@@ -11,6 +11,7 @@
           <div>{{ sets.weight }} x {{ sets.reps }}</div>
         </div>
         </div>
+        <div v-if="checkNote(record.note)" class="note">{{ record.note }}</div>
       </div>
     </div>
   </div>
@@ -44,6 +45,7 @@ export default {
           part_name: record.part_master.part_name,
           set_count: record.set_count,
           set_detail: record.set_detail,
+          note: record.note,
         });
         return acc;
       }, {});
@@ -85,6 +87,10 @@ export default {
       // 曜日を返す
       return dayOfWeekStr[dayOfWeek];
     },
+    checkNote(note) {
+      console.log(note);
+      return note !== "";
+    },
   },
 };
 </script>
@@ -116,5 +122,9 @@ export default {
 }
 .set-detail {
   grid-column: 3/4;
+}
+.note {
+  font-size: 10px;
+  grid-column: 2/3;
 }
 </style>
