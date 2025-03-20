@@ -2,7 +2,6 @@
   <div class="record-home">
     <h1>記録</h1>
     <div class="date">
-      <label>日付：</label>
       <input type="date" v-model="createDate">
     </div>
     <div v-for="(record, index) in recordLists" :key="index">
@@ -15,20 +14,20 @@
       ></record-detail>
     </div>
     <div v-if="recordLists.length > 1">
-      <button @click="deleteRecord">レコード削除</button>
+      <button class="delete-record-button" @click="deleteRecord"></button>
     </div>
     <div>
-      <button @click="addRecord">レコード追加</button>
+      <button class="add-record-button" @click="addRecord"></button>
     </div>
     <div>
-      <button @click="submitRecord">送信</button>
+      <button class="submit-record-button" @click="submitRecord">送信</button>
     </div>
   </div>
 </template>
 
 <script>
 import RecordDetail from './RecordDetail.vue';
-import { FUNCTIONS_URL } from "@/Constant.js";
+import { FUNCTIONS_URL } from '@/constant.js'
 
 export default {
   name: "RecordHome",
@@ -150,4 +149,41 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.add-record-button {
+  background-image: url('@/assets/plus.png');
+  background-repeat: no-repeat;
+  background-size: contain; /* 画像をボタン内に収める */
+  background-position: center; /* 画像を中央に配置 */
+  background-color: #ffffff;
+  width: 40px; /* 画像に合わせてボタンの幅を設定 */
+  height: 40px; /* 画像に合わせてボタンの高さを設定 */
+  border: none; /* ボタンのボーダーを削除 */
+  padding: 0; /* ボタンのパディングを削除 */
+  cursor: pointer; /* カーソルをポインターに変更 */
+}
+.delete-record-button {
+  background-image: url('@/assets/minus.png');
+  background-repeat: no-repeat;
+  background-size: contain; /* 画像をボタン内に収める */
+  background-position: center; /* 画像を中央に配置 */
+  background-color: #ffffff;
+  width: 40px; /* 画像に合わせてボタンの幅を設定 */
+  height: 40px; /* 画像に合わせてボタンの高さを設定 */
+  border: none; /* ボタンのボーダーを削除 */
+  padding: 0; /* ボタンのパディングを削除 */
+  cursor: pointer; /* カーソルをポインターに変更 */
+}
+.submit-record-button {
+  margin: 15px;
+  display       : inline-block;
+  border-radius : 5cm;          /* 角丸       */
+  text-align    : center;      /* 文字位置   */
+  cursor        : pointer;     /* カーソル   */
+  padding       : 6px 12px;   /* 余白       */
+  background    : #007fff;     /* 背景色     */
+  color         : #ffffff;     /* 文字色     */
+  line-height   : 1em;         /* 1行の高さ  */
+  transition    : .3s;         /* なめらか変化 */
+  border        : 2px solid #007fff;    /* 枠の指定 */
+}
 </style>

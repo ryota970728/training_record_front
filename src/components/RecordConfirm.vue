@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { FUNCTIONS_URL } from "@/Constant.js";
+import { FUNCTIONS_URL } from '@/constant.js'
 
 export default {
   name: "RecordConfirm",

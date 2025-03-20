@@ -1,15 +1,15 @@
 <template>
-  <div>
+  <div class="record-detail">
     <!-- 部位 -->
-    <div>
-      <label v-for="part in partList" :key="part.part_id">
+    <div class="radio-container">
+      <label v-for="part in partList" :key="part.part_id" class="radio-part">
         <input type="radio" v-model="selectedPart" :value="part.part_id">
         {{ part.part_name }}
       </label>
     </div>
     <!-- 種目 -->
-    <div>
-       <select v-model="selectedMenu">
+    <div class="select-container">
+       <select v-model="selectedMenu" class="select-menu">
         <option disabled value="">選択してください</option>
         <option v-for="menu in filteredMenuList" :key="menu.menu_id" :value="menu.menu_name">
           {{ menu.menu_name }}
@@ -17,17 +17,19 @@
        </select>
     </div>
     <!-- セット数 -->
-    <div>
+    <div class="set-count-container">
       <label>セット数：</label><input class="set-count" type="number" v-model="setCount" @input="updateSets">
     </div>
-    <div v-for="(value, index) in setCountList" :key="index">
+    <!-- 重量と回数 -->
+    <div v-for="(value, index) in setCountList" :key="index" class="weight-sets-container">
       <weight-sets
       @update-weight="updateWeight($event, index)"
       @update-reps="updateReps($event, index)"
       ref="child"
       ></weight-sets>
     </div>
-    <div>
+    <!-- 備考欄 -->
+    <div class="note-container">
       <label>備考欄：</label><textarea v-model="note"></textarea>
     </div>
 
@@ -159,7 +161,58 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+/* レコード詳細のスタイル */
+.record-detail {
+  padding: 10px;
+}
+/* 部位-コンテナ */
+.radio-container {
+  display: flex;
+  flex-wrap: wrap; /* 子要素の折り返し設定 */
+  justify-content: center; /* 水平方向の配置設定 */
+  padding: 0 20%;
+  gap: 0 10px; /* 要素間の間隔を設定 */
+  margin: 5px;
+}
+
+/* 部位-ラジオボタン */
+.radio-part {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px; /* ラベル間の下マージンを設定 */
+}
+
+/* 種目-コンテナ */
+.select-container {
+  display: inline-block;
+  margin: 5px;
+}
+
+/* 種目-ドロップダウン */
+.select-menu {
+  width: auto;
+  width: auto;
+  height: 25px;
+  font-size: 10px;
+}
+
+/* セット数-コンテナ */
+.select-container {
+  margin: 5px;
+}
+
+/* セット数-入力フィールド */
 .set-count{
   width: 50px;
+}
+
+/* セット数-コンテナ */
+.weiht-sets-container {
+  margin: 5px;
+}
+
+/* 備考-コンテナ */
+.note-container {
+  margin: 5px;
 }
 </style>
