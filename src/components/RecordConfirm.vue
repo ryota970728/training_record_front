@@ -80,7 +80,7 @@ export default {
     },
     getDayOffWeek(dateString) {
       const date = new Date(dateString);
-        // 曜日の配列
+      // 曜日の配列
       const dayOfWeekStr = ["日", "月", "火", "水", "木", "金", "土"];
       // 曜日を取得
       const dayOfWeek = date.getDay();
@@ -88,7 +88,6 @@ export default {
       return dayOfWeekStr[dayOfWeek];
     },
     checkNote(note) {
-      console.log(note);
       return note !== "";
     },
   },

@@ -20,7 +20,7 @@
       <button class="add-record-button" @click="addRecord"></button>
     </div>
     <div>
-      <button class="submit-record-button" @click="submitRecord">送信</button>
+      <button class="submit-record-button" @click="submitRecord" :disabled="isLoading">送信</button>
     </div>
   </div>
 </template>
@@ -48,6 +48,8 @@ export default {
       partList: [],
       // 種目の一覧
       menuList: [],
+      // 送信制御
+      isLoading: false,
     }
   },
   mounted() {
@@ -61,7 +63,13 @@ export default {
     },
     // レコードを削除
     deleteRecord() {
-      this.recordLists.pop();
+      if (this.recordLists.length > 1) {
+        // レコード削除確認
+        if (confirm("最新の記録を削除しますか？")) {
+          // ユーザーが「OK」をクリックした場合
+          this.recordLists.pop();
+        }
+      }
     },
     // 部位一覧を取得する関数
     fetchPart() {
@@ -95,22 +103,36 @@ export default {
     },
     // 記録を登録する
     async submitRecord(){
+      this.inputCheck = false;
+      this.isLoading = true;
       // 全ての子コンポーネントをループ
       this.$refs.child.forEach(child => {
+        if (this.inputCheck){
+          // forEachから処理を抜ける
+          return;
+        }
         if (child && child.setRecordDetailData){
           // 子コンポーネントのsetRecordDetailData()を呼び出す
           this.inputCheck = child.setRecordDetailData();
           if (this.inputCheck){
-            // forEachから処理を抜ける
+            // コンポーネントの処理から抜ける
             return;
           }
         }
       });
 
       if (this.inputCheck){
-        // 未入力項目あり
+        // 未入力項目ありの場合処理を抜ける
+        this.isLoading = false;
         return;
       }
+
+      // 送信確認
+      if (!confirm("送信しますか？")) {
+          // キャンセルの場合処理を抜ける
+          this.isLoading = false;
+          return
+        }
 
       for (const item of this.formDataList) {
         let formData = new FormData();
@@ -123,12 +145,14 @@ export default {
             }
           });
           console.log("success!", response.data);
+          alert('送信成功!');
         }catch(err){
           console.log(err);
           alert('送信失敗!');
+        }finally{
+          this.isLoading = false;
         }
       }
-      alert('送信成功!');
       // 全ての子コンポーネントをループ
       this.$refs.child.forEach(child => {
         if (child && child.clearRecordDetailData){
