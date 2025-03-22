@@ -73,7 +73,9 @@ export default {
     },
     // 部位一覧を取得する関数
     fetchPart() {
-      if (this.partList.length === 0) {
+      if (sessionStorage.getItem('partList') !== null) {
+        this.partList = JSON.parse(sessionStorage.getItem('partList'));
+      }else{
         this.$axios.get(FUNCTIONS_URL.GET_PART,{
           headers: {
             Authorization: FUNCTIONS_URL.AUTHORIZATION,
@@ -81,6 +83,7 @@ export default {
         })
         .then((res) =>{
           this.partList = res.data;
+          sessionStorage.setItem('partList', JSON.stringify(this.partList));
         }).catch((err) =>{
           console.log(err);
         })
@@ -88,7 +91,9 @@ export default {
     },
     // 種目一覧を取得する関数
     fetchMenu(){
-      if (this.menuList.length === 0) {
+      if (sessionStorage.getItem('menuList') !== null) {
+        this.menuList = JSON.parse(sessionStorage.getItem('menuList'));
+        }else{
         this.$axios.get(FUNCTIONS_URL.GET_MENU,{
           headers: {
             Authorization: FUNCTIONS_URL.AUTHORIZATION,
@@ -96,6 +101,7 @@ export default {
         })
         .then((res) =>{
           this.menuList = res.data;
+          sessionStorage.setItem('menuList', JSON.stringify(this.menuList));
         }).catch((err) =>{
           console.log(err);
         })
