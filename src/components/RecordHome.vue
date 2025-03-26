@@ -1,6 +1,5 @@
 <template>
   <div class="record-home">
-    <h1>記録</h1>
     <div class="date">
       <input type="date" v-model="createDate">
     </div>
@@ -151,14 +150,23 @@ export default {
             }
           });
           console.log("success!", response.data);
-          alert('送信成功!');
         }catch(err){
           console.log(err);
           alert('送信失敗!');
+          return;
         }finally{
           this.isLoading = false;
         }
       }
+      alert('送信成功!');
+      this.clearRecordData();
+    },
+    // 子から受け取った配列を親で保持する
+    handleArrayUpdate(newArray) {
+      this.formDataList.push(newArray);
+    },
+    // フィールド、変数の初期化
+    clearRecordData() {
       // 全ての子コンポーネントをループ
       this.$refs.child.forEach(child => {
         if (child && child.clearRecordDetailData){
@@ -168,11 +176,7 @@ export default {
       });
       this.formDataList = []; // formDataListを初期化
       this.inputCheck = false; // inputCheckを初期化
-    },
-    // 子から受け取った配列を親で保持する
-    handleArrayUpdate(newArray) {
-      this.formDataList.push(newArray);
-    },
+    }
   }
 }
 </script>

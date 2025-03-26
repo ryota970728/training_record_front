@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+    <div class="header">
+      <record-header></record-header>
+    </div>
     <main class="content">
       <keep-alive>
         <router-view></router-view>
@@ -12,11 +15,13 @@
 </template>
 
 <script>
+import RecordHeader from "./components/RecordHeader.vue";
 import RecordFooter from "./components/RecordFooter.vue";
 
 export default {
   name: 'App',
   components: {
+    RecordHeader,
     RecordFooter,
   },
 }
@@ -35,14 +40,23 @@ export default {
 }
 .content {
   flex: 1; /* フッター部分以外を可変長にする */
-  padding-bottom: 10vh; /* 100vhに対して10vhの余白を追加 */
+  padding-top: 5vh; /* 100vhに対して5vhの余白を追加 */;
+  padding-bottom: 7vh; /* 100vhに対して7vhの余白を追加 */
+}
+.header {
+  position: fixed; /* 固定位置にする */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5vh; /* ヘッダー部分の高さを5vhに設定 */
+  background: #FFFFFF;
 }
 .footer {
   position: fixed; /* 固定位置にする */
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 10vh; /* フッター部分の高さを10vhに設定 */
+  height: 7vh; /* フッター部分の高さを7vhに設定 */
   background: #FFFFFF;
 }
 </style>

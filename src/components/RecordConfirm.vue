@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>記録一覧</h1>
     <div v-for="(item, index) in sortedFilteredRecords" :key="index" class="record">
       <div class="create-date">{{ item.create_date }} ({{ getDayOffWeek(item.create_date) }})</div>
       <div v-for="record in item.records" :key="record.record_id" class="container">

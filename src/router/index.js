@@ -15,17 +15,15 @@ const routes = [
   {
     path: '/record',
     name: 'RecordHome',
-    component: RecordHome
+    component: RecordHome,
+    meta: {title: '記録'}
   },
   {
     path: '/confirm',
     name: 'RecordConfirm',
-    component: RecordConfirm
+    component: RecordConfirm,
+    meta: {title: '記録一覧'}
   },
-  {
-    path: '*',
-    redirect: '/record'
-  }
 ];
 
 const router = new VueRouter({
