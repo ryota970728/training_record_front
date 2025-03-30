@@ -19,19 +19,25 @@
       <button class="add-record-button" @click="addRecord"></button>
     </div>
     <div>
-      <button class="submit-record-button" @click="submitRecord" :disabled="isLoading">送信</button>
+      <button class="submit-record-button" @click="sendConfirm">送信</button>
     </div>
+    <record-modal v-show="isShowModal" v-on:cancel="stopModal" v-on:ok="okModal"></record-modal>
+    <progress-circular v-if="isLoading"></progress-circular>
   </div>
 </template>
 
 <script>
 import RecordDetail from './RecordDetail.vue';
+import RecordModal from './common/RecordModal.vue';
+import ProgressCircular from './common/ProgressCircular.vue';
 import { FUNCTIONS_URL } from '@/constant.js'
 
 export default {
   name: "RecordHome",
   components: {
     RecordDetail,
+    RecordModal,
+    ProgressCircular,
   },
   data() {
     return {
@@ -41,14 +47,14 @@ export default {
       recordLists: [1],
       // フォームデータのリスト
       formDataList: [],
-      // 入力チェック判定
-      inputCheck: false,
       // 部位の一覧
       partList: [],
       // 種目の一覧
       menuList: [],
-      // 送信制御
+      // ローディング状態
       isLoading: false,
+      // モーダル制御
+      isShowModal: false,
     }
   },
   mounted() {
@@ -70,6 +76,78 @@ export default {
         }
       }
     },
+    // 子から受け取った配列を親で保持する
+    handleArrayUpdate(newArray) {
+      this.formDataList.push(newArray);
+    },
+    // 入力チェック処理
+    inputCheck() {
+      let isInputCheck = false;
+      // 全ての子コンポーネントをループ
+      this.$refs.child.forEach(child => {
+        // forEachから抜ける
+        if (isInputCheck) {
+          return;
+        }
+        if (child && child.checkRecordDetailData){
+          // 子コンポーネントのcheckRecordDetailData()を呼び出す
+          isInputCheck = child.checkRecordDetailData();
+          // コンポーネントの処理から抜ける
+          if (isInputCheck){
+            return;
+          }
+        }
+      });
+      return isInputCheck;
+    },
+    // 入力データや変数の初期化
+    clearRecordData() {
+      // 全ての子コンポーネントをループ
+      this.$refs.child.forEach(child => {
+        if (child && child.clearRecordDetailData){
+          // 子コンポーネントのclearRecordDetailData()を呼び出す
+          child.clearRecordDetailData();
+        }
+      });
+      this.formDataList = []; // formDataListを初期化
+    },
+    // 送信ボタン押下
+    sendConfirm() {
+      // 入力チェック
+      if (this.inputCheck()){
+        return;
+      }
+      // モーダルを表示
+      this.isShowModal = true;
+    },
+    // キャンセル
+    stopModal() {
+      // モーダルを非表示
+      this.isShowModal = false;
+    },
+    // OK
+    async okModal() {
+      // ローディング開始
+      this.isLoading = true;
+
+      // モーダルを非表示
+      this.isShowModal = false;
+
+      // 送信処理
+      const isSuccess = await this.postRecordData();
+
+      // ローディング停止
+      this.isLoading = false;
+
+      if (isSuccess) {
+        // 送信成功
+        this.clearRecordData();
+      }else{
+        // 送信失敗
+        alert("送信に失敗しました。");
+      }
+    },
+    /*** API通信 ****/
     // 部位一覧を取得する関数
     fetchPart() {
       if (sessionStorage.getItem('partList') !== null) {
@@ -106,39 +184,8 @@ export default {
         })
       }
     },
-    // 記録を登録する
-    async submitRecord(){
-      this.inputCheck = false;
-      this.isLoading = true;
-      // 全ての子コンポーネントをループ
-      this.$refs.child.forEach(child => {
-        if (this.inputCheck){
-          // forEachから処理を抜ける
-          return;
-        }
-        if (child && child.setRecordDetailData){
-          // 子コンポーネントのsetRecordDetailData()を呼び出す
-          this.inputCheck = child.setRecordDetailData();
-          if (this.inputCheck){
-            // コンポーネントの処理から抜ける
-            return;
-          }
-        }
-      });
-
-      if (this.inputCheck){
-        // 未入力項目ありの場合処理を抜ける
-        this.isLoading = false;
-        return;
-      }
-
-      // 送信確認
-      if (!confirm("送信しますか？")) {
-          // キャンセルの場合処理を抜ける
-          this.isLoading = false;
-          return
-        }
-
+    // 送信処理
+    async postRecordData() {
       for (const item of this.formDataList) {
         let formData = new FormData();
         formData.append('record', JSON.stringify(item));
@@ -149,34 +196,14 @@ export default {
               "Content-Type": "application/json",
             }
           });
-          console.log("success!", response.data);
+          console.log("success:", response.data);
         }catch(err){
-          console.log(err);
-          alert('送信失敗!');
-          return;
-        }finally{
-          this.isLoading = false;
+          console.log("error:", err);
+          return false;
         }
       }
-      alert('送信成功!');
-      this.clearRecordData();
+      return true;
     },
-    // 子から受け取った配列を親で保持する
-    handleArrayUpdate(newArray) {
-      this.formDataList.push(newArray);
-    },
-    // フィールド、変数の初期化
-    clearRecordData() {
-      // 全ての子コンポーネントをループ
-      this.$refs.child.forEach(child => {
-        if (child && child.clearRecordDetailData){
-          // 子コンポーネントのclearRecordDetailData()を呼び出す
-          child.clearRecordDetailData();
-        }
-      });
-      this.formDataList = []; // formDataListを初期化
-      this.inputCheck = false; // inputCheckを初期化
-    }
   }
 }
 </script>

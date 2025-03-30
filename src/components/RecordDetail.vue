@@ -108,7 +108,7 @@ export default {
       this.repsList[index] = newReps;
     },
     // 「送信」ボタンが押下された際に動く関数
-    setRecordDetailData() {
+    checkRecordDetailData() {
       // 入力チェック
       if (!this.selectedMenu) {
         alert('種目を選択してください');
