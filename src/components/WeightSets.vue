@@ -1,7 +1,9 @@
 <template>
-  <div>
-    <div>
+  <div class="weight-sets">
+    <div class="weigh-box">
       <label><input class="weightBox" type="number" v-model="weight" @input="updateWeight">kg</label>
+    </div>
+    <div class="reps-box">
       <label><input class="repsBox" type="number" v-model="reps" @input="updateReps">回</label>
     </div>
   </div>
@@ -47,6 +49,11 @@ export default {
 </script>
 
 <style scoped>
+.weight-sets {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .weightBox {
   margin: 5px 3px 5px 0px;
   width: 50px;

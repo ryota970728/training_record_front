@@ -1,15 +1,21 @@
 <template>
   <div class="record-footer-container">
-    <div class="record-item">
+    <div class="fotter-item record-item">
       <router-link to="/record">
         <div class="link-img record-img"></div>
         <div class="title-text">記録</div>
       </router-link>
     </div>
-    <div class="confirm-item">
+    <div class="fotter-item confirm-item">
       <router-link to="/confirm">
         <div class="link-img confirm-img"></div>
         <div class="title-text">記録一覧</div>
+      </router-link>
+    </div>
+    <div class="fotter-item search-item">
+      <router-link to="/search">
+        <div class="link-img search-img"></div>
+        <div class="title-text">検索</div>
       </router-link>
     </div>
   </div>
@@ -45,23 +51,23 @@ export default {
   padding: 0; /* ボタンのパディングを削除 */
   cursor: pointer; /* カーソルをポインターに変更 */
 }
+.fotter-item a {
+  text-decoration: none; /* リンクの取り消し線 */
+  color: inherit; /* 親要素の文字色を継承 */
+}
 .title-text {
   font-size: 10px;
 }
 /** 記録 */
-.record-item a {
-  text-decoration: none; /* リンクの取り消し線 */
-  color: inherit; /* 親要素の文字色を継承 */
-}
 .record-img {
   background-image: url('@/assets/record.png');
 }
 /** 記録一覧 */
-.confirm-item a {
-  text-decoration: none; /* リンクの取り消し線 */
-  color: inherit; /* 親要素の文字色を継承 */
-}
 .confirm-img {
   background-image: url('@/assets/recordconfirm.png');
+}
+/** 記録検索 */
+.search-img {
+  background-image: url('@/assets/search.png');
 }
 </style>

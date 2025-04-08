@@ -3,6 +3,8 @@ import VueRouter from 'vue-router';
 
 import RecordHome from '../components/RecordHome.vue';
 import RecordConfirm from '../components/RecordConfirm.vue';
+import RecordSearch from '../components/RecordSearch.vue';
+
 
 // routerをVueインスタンス全体で使用できるようにプラグインの設定
 Vue.use(VueRouter)
@@ -23,6 +25,12 @@ const routes = [
     name: 'RecordConfirm',
     component: RecordConfirm,
     meta: {title: '記録一覧'}
+  },
+  {
+    path: '/search',
+    name: 'RecordSearch',
+    component: RecordSearch,
+    meta: {title: '記録検索'}
   },
 ];
 

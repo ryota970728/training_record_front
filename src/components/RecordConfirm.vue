@@ -3,7 +3,7 @@
     <div v-for="(item, index) in sortedFilteredRecords" :key="index" class="record">
       <div class="create-date">{{ item.create_date }} ({{ getDayOffWeek(item.create_date) }})</div>
       <div v-for="record in item.records" :key="record.record_id" class="container">
-        <div class="part-name">{{ record.part_name }}</div>
+        <div class="part-name" :style="{background: record.part_color, color: '#FFFFFF'}">{{ record.part_name }}</div>
         <div class="menu-name">{{ record.menu_name }}</div>
         <div class="set-detail">
           <div v-for="(sets, index) in record.set_detail" :key="index">
@@ -17,7 +17,6 @@
 </template>
 
 <script>
-import { FUNCTIONS_URL } from '@/constant.js'
 
 export default {
   name: "RecordConfirm",
@@ -28,7 +27,7 @@ export default {
     }
   },
   mounted() {
-    this.fetchRecords();
+    this.recordList = JSON.parse(sessionStorage.getItem('recordList'));
   },
   computed: {
     filteredRecords() {
@@ -42,6 +41,7 @@ export default {
           record_id: record.record_id,
           menu_name: record.menu_master.menu_name,
           part_name: record.part_master.part_name,
+          part_color: record.part_master.part_color,
           set_count: record.set_count,
           set_detail: record.set_detail,
           note: record.note,
@@ -63,20 +63,6 @@ export default {
     },
   },
   methods: {
-    fetchRecords() {
-      this.$axios
-        .get(FUNCTIONS_URL.GET_RECORDS, {
-          headers: {
-            Authorization: FUNCTIONS_URL.AUTHORIZATION,
-          },
-        })
-        .then((res) => {
-          this.recordList = res.data;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
     getDayOffWeek(dateString) {
       const date = new Date(dateString);
       // 曜日の配列
@@ -96,7 +82,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .record {
-  padding: 5%
+  padding: 5%;
+  font-size: 14px;
 }
 .container {
   display: grid;
@@ -109,14 +96,14 @@ export default {
   text-align: left;
 }
 .part-name {
-  grid-column: 1/2
+  grid-column: 1/2;
 }
 .menu-name {
   text-align: center;
   grid-column: 2/3;
 }
 .set-count {
-  grid-column: 3/4
+  grid-column: 3/4;
 }
 .set-detail {
   grid-column: 3/4;

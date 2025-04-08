@@ -1,7 +1,7 @@
 <template>
   <div class="record-home">
     <div class="date">
-      <input type="date" v-model="createDate">
+      <input class="input-date" type="date" v-model="createDate">
     </div>
     <div v-for="(record, index) in recordLists" :key="index">
       <record-detail
@@ -60,6 +60,7 @@ export default {
   mounted() {
     this.fetchPart();
     this.fetchMenu();
+    this.fetchRecords();
   },
   methods: {
     // レコードを追加
@@ -184,6 +185,22 @@ export default {
         })
       }
     },
+    // 記録一覧を取得する関数
+    fetchRecords() {
+      this.$axios
+        .get(FUNCTIONS_URL.GET_RECORDS, {
+          headers: {
+            Authorization: FUNCTIONS_URL.AUTHORIZATION,
+          },
+        })
+        .then((res) => {
+          this.recordList = res.data;
+          sessionStorage.setItem('recordList', JSON.stringify(this.recordList));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     // 送信処理
     async postRecordData() {
       for (const item of this.formDataList) {
@@ -246,5 +263,8 @@ export default {
   line-height   : 1em;         /* 1行の高さ  */
   transition    : .3s;         /* なめらか変化 */
   border        : 2px solid #007fff;    /* 枠の指定 */
+}
+.input-date {
+  font-size: 16px;
 }
 </style>

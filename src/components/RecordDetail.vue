@@ -16,7 +16,7 @@
         </option>
        </select>
     </div>
-    <!-- セット数 -->
+        <!-- セット数 -->
     <div class="set-count-container">
       <label>セット数：</label><input class="set-count" type="number" v-model="setCount" @input="updateSets">
     </div>
@@ -30,7 +30,7 @@
     </div>
     <!-- 備考欄 -->
     <div class="note-container">
-      <label>備考欄：</label><textarea v-model="note"></textarea>
+      <textarea v-model="note"></textarea>
     </div>
 
   </div>
@@ -180,6 +180,7 @@ export default {
   display: flex;
   align-items: center;
   margin-bottom: 5px; /* ラベル間の下マージンを設定 */
+  font-size: 20px;
 }
 
 /* 種目-コンテナ */
@@ -193,7 +194,7 @@ export default {
   width: auto;
   width: auto;
   height: 25px;
-  font-size: 10px;
+  font-size: 14px;
 }
 
 /* セット数-コンテナ */

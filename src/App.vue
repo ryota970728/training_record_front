@@ -49,7 +49,8 @@ export default {
   left: 0;
   width: 100%;
   height: 5vh; /* ヘッダー部分の高さを5vhに設定 */
-  background: #FFFFFF;
+  background: #df5656;
+  color: #ffffff;
 }
 .footer {
   position: fixed; /* 固定位置にする */
@@ -57,6 +58,7 @@ export default {
   bottom: 0;
   width: 100%;
   height: 7vh; /* フッター部分の高さを7vhに設定 */
-  background: #FFFFFF;
+  background: #df5656;
+  color: #ffffff;
 }
 </style>
