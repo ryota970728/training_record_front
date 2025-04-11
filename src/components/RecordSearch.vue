@@ -71,7 +71,12 @@ export default {
       // 選択した条件に応じて検索する
       this.searchPartName = this.selectedMenu;
       this.filterRecordList = this.recordList.filter(record => {
+        // 選択された種目でフィルタリング
         return this.selectedMenu == record.menu_master.menu_name;
+      })
+      .sort((a, b) => {
+        // 日付でソート（降順）
+        return new Date(b.create_date) - new Date(a.create_date)
       });
     },
     getDayOffWeek(dateString) {
