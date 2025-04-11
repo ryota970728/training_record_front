@@ -1,14 +1,14 @@
 <template>
   <div class="record-detail">
     <!-- 部位 -->
-    <div class="radio-container">
+    <div class="part-container">
       <label v-for="part in partList" :key="part.part_id" class="radio-part">
         <input type="radio" v-model="selectedPart" :value="part.part_id">
         {{ part.part_name }}
       </label>
     </div>
     <!-- 種目 -->
-    <div class="select-container">
+    <div class="menu-container">
        <select v-model="selectedMenu" class="select-menu">
         <option disabled value="">選択してください</option>
         <option v-for="menu in filteredMenuList" :key="menu.menu_id" :value="menu.menu_name">
@@ -30,7 +30,7 @@
     </div>
     <!-- 備考欄 -->
     <div class="note-container">
-      <textarea v-model="note"></textarea>
+      <textarea v-model="note" class="textarea-note"></textarea>
     </div>
 
   </div>
@@ -159,14 +159,18 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style scoped>
 /* レコード詳細のスタイル */
 .record-detail {
   padding: 10px;
+  border: solid 0.1rem rgb(0,0,0,0.2);
+  border-radius: 2%;
+  margin: 1rem;
 }
+
 /* 部位-コンテナ */
-.radio-container {
+.part-container {
   display: flex;
   flex-wrap: wrap; /* 子要素の折り返し設定 */
   justify-content: center; /* 水平方向の配置設定 */
@@ -180,11 +184,11 @@ export default {
   display: flex;
   align-items: center;
   margin-bottom: 5px; /* ラベル間の下マージンを設定 */
-  font-size: 20px;
+  font-size: 1.3rem;
 }
 
 /* 種目-コンテナ */
-.select-container {
+.menu-container {
   display: inline-block;
   margin: 5px;
 }
@@ -194,17 +198,22 @@ export default {
   width: auto;
   width: auto;
   height: 25px;
-  font-size: 14px;
+  font-size: 1rem;
 }
 
 /* セット数-コンテナ */
-.select-container {
+.set-count-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 5px;
+  gap: 0.5rem;
 }
 
 /* セット数-入力フィールド */
 .set-count{
   width: 50px;
+  font-size: 1.2rem;
 }
 
 /* セット数-コンテナ */
@@ -215,5 +224,11 @@ export default {
 /* 備考-コンテナ */
 .note-container {
   margin: 5px;
+}
+
+/* 備考-テキストエリア */
+.textarea-note {
+  font-size: 1rem;
+
 }
 </style>

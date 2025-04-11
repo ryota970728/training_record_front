@@ -13,13 +13,13 @@
       ></record-detail>
     </div>
     <div v-if="recordLists.length > 1">
-      <button class="delete-record-button" @click="deleteRecord"></button>
+      <button class="delete-button" @click="deleteRecord"></button>
     </div>
     <div>
-      <button class="add-record-button" @click="addRecord"></button>
+      <button class="add-button" @click="addRecord"></button>
     </div>
     <div>
-      <button class="submit-record-button" @click="sendConfirm">送信</button>
+      <button class="submit-button" @click="sendConfirm">送信</button>
     </div>
     <record-modal v-show="isShowModal" v-on:cancel="stopModal" v-on:ok="okModal"></record-modal>
     <progress-circular v-if="isLoading"></progress-circular>
@@ -30,7 +30,6 @@
 import RecordDetail from './RecordDetail.vue';
 import RecordModal from './common/RecordModal.vue';
 import ProgressCircular from './common/ProgressCircular.vue';
-import { FUNCTIONS_URL } from '@/constant.js'
 
 export default {
   name: "RecordHome",
@@ -58,9 +57,7 @@ export default {
     }
   },
   mounted() {
-    this.fetchPart();
-    this.fetchMenu();
-    this.fetchRecords();
+    this.fetchData();
   },
   methods: {
     // レコードを追加
@@ -135,123 +132,64 @@ export default {
       this.isShowModal = false;
 
       // 送信処理
-      const isSuccess = await this.postRecordData();
+      const isSuccess = await this.$apiService.postRecordData(this.formDataList);
 
       // ローディング停止
       this.isLoading = false;
 
       if (isSuccess) {
         // 送信成功
-        this.clearRecordData();
+        this.clearRecordData(); // 入力データや変数の初期化
+        this.recordList = await this.$apiService.fetchRecords(); // 記録一覧取得
       }else{
         // 送信失敗
         alert("送信に失敗しました。");
       }
     },
-    /*** API通信 ****/
-    // 部位一覧を取得する関数
-    fetchPart() {
-      if (sessionStorage.getItem('partList') !== null) {
-        this.partList = JSON.parse(sessionStorage.getItem('partList'));
-      }else{
-        this.$axios.get(FUNCTIONS_URL.GET_PART,{
-          headers: {
-            Authorization: FUNCTIONS_URL.AUTHORIZATION,
-          },
-        })
-        .then((res) =>{
-          this.partList = res.data;
-          sessionStorage.setItem('partList', JSON.stringify(this.partList));
-        }).catch((err) =>{
-          console.log(err);
-        })
-      }
-    },
-    // 種目一覧を取得する関数
-    fetchMenu(){
-      if (sessionStorage.getItem('menuList') !== null) {
-        this.menuList = JSON.parse(sessionStorage.getItem('menuList'));
-        }else{
-        this.$axios.get(FUNCTIONS_URL.GET_MENU,{
-          headers: {
-            Authorization: FUNCTIONS_URL.AUTHORIZATION,
-          },
-        })
-        .then((res) =>{
-          this.menuList = res.data;
-          sessionStorage.setItem('menuList', JSON.stringify(this.menuList));
-        }).catch((err) =>{
-          console.log(err);
-        })
-      }
-    },
-    // 記録一覧を取得する関数
-    fetchRecords() {
-      this.$axios
-        .get(FUNCTIONS_URL.GET_RECORDS, {
-          headers: {
-            Authorization: FUNCTIONS_URL.AUTHORIZATION,
-          },
-        })
-        .then((res) => {
-          this.recordList = res.data;
-          sessionStorage.setItem('recordList', JSON.stringify(this.recordList));
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    // 送信処理
-    async postRecordData() {
-      for (const item of this.formDataList) {
-        let formData = new FormData();
-        formData.append('record', JSON.stringify(item));
-        try{
-          const response = await this.$axios.post(FUNCTIONS_URL.POST_RECORD, formData, {
-            headers :{
-              Authorization: FUNCTIONS_URL.AUTHORIZATION,
-              "Content-Type": "application/json",
-            }
-          });
-          console.log("success:", response.data);
-        }catch(err){
-          console.log("error:", err);
-          return false;
-        }
-      }
-      return true;
+    // API通信
+    async fetchData() {
+      this.partList = await this.$apiService.fetchPart();
+      this.menuList = await this.$apiService.fetchMenu();
+      this.recordList = await this.$apiService.fetchRecords();
     },
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style scoped>
-.add-record-button {
+/** 追加ボタン */
+.add-button {
   background-image: url('@/assets/plus.png');
   background-repeat: no-repeat;
   background-size: contain; /* 画像をボタン内に収める */
   background-position: center; /* 画像を中央に配置 */
   background-color: #ffffff;
-  width: 40px; /* 画像に合わせてボタンの幅を設定 */
-  height: 40px; /* 画像に合わせてボタンの高さを設定 */
+  width: 50px; /* 画像に合わせてボタンの幅を設定 */
+  height: 50px; /* 画像に合わせてボタンの高さを設定 */
   border: none; /* ボタンのボーダーを削除 */
   padding: 0; /* ボタンのパディングを削除 */
   cursor: pointer; /* カーソルをポインターに変更 */
+  background-color: #f8f4e6;
 }
-.delete-record-button {
+
+/** 削除ボタン */
+.delete-button {
   background-image: url('@/assets/minus.png');
   background-repeat: no-repeat;
   background-size: contain; /* 画像をボタン内に収める */
   background-position: center; /* 画像を中央に配置 */
   background-color: #ffffff;
-  width: 40px; /* 画像に合わせてボタンの幅を設定 */
-  height: 40px; /* 画像に合わせてボタンの高さを設定 */
+  width: 50px; /* 画像に合わせてボタンの幅を設定 */
+  height: 50px; /* 画像に合わせてボタンの高さを設定 */
   border: none; /* ボタンのボーダーを削除 */
   padding: 0; /* ボタンのパディングを削除 */
   cursor: pointer; /* カーソルをポインターに変更 */
+  background-color: #f8f4e6;
 }
-.submit-record-button {
+
+/** 削除ボタン */
+.submit-button {
   margin: 15px;
   display       : inline-block;
   border-radius : 5cm;          /* 角丸       */
@@ -260,11 +198,14 @@ export default {
   padding       : 6px 12px;   /* 余白       */
   background    : #007fff;     /* 背景色     */
   color         : #ffffff;     /* 文字色     */
+  font-size: 1rem;             /* フォントサイズ */
   line-height   : 1em;         /* 1行の高さ  */
   transition    : .3s;         /* なめらか変化 */
   border        : 2px solid #007fff;    /* 枠の指定 */
 }
+
+/** 日付入力フィールド */
 .input-date {
-  font-size: 16px;
+  font-size: 1rem;
 }
 </style>

@@ -1,10 +1,10 @@
 <template>
   <div class="weight-sets">
-    <div class="weigh-box">
-      <label><input class="weightBox" type="number" v-model="weight" @input="updateWeight">kg</label>
+    <div class="weigh-box-wrapper">
+      <label><input class="weight-box" type="number" v-model="weight" @input="updateWeight">kg</label>
     </div>
-    <div class="reps-box">
-      <label><input class="repsBox" type="number" v-model="reps" @input="updateReps">回</label>
+    <div class="reps-box-wrapper">
+      <label><input class="reps-box" type="number" v-model="reps" @input="updateReps">回</label>
     </div>
   </div>
 </template>
@@ -49,17 +49,25 @@ export default {
 </script>
 
 <style scoped>
+/* 重量と回数 */
 .weight-sets {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 0.5rem;
 }
-.weightBox {
+
+/* 重量の入力フィールド */
+.weight-box {
   margin: 5px 3px 5px 0px;
   width: 50px;
+  font-size: 1.2rem;;
 }
-.repsBox{
+
+/* 回数の入力フィールド */
+.reps-box{
   margin: 5px 3px 5px 10px;
   width: 50px;
+  font-size: 1.2rem;
 }
 </style>

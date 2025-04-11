@@ -17,7 +17,7 @@
        </select>
     </div>
     <div>
-      <button @click="searchRecordData" class="search-record-button">検索</button>
+      <button @click="searchRecordData" class="search-button">検索</button>
     </div>
 
     <div class="search-wrapper">
@@ -87,7 +87,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 /* 部位-コンテナ */
 .radio-container {
   display: flex;
@@ -103,7 +103,7 @@ export default {
   display: flex;
   align-items: center;
   margin-bottom: 5px; /* ラベル間の下マージンを設定 */
-  font-size: 20px;
+  font-size: 1.3rem;
 }
 
 /* 種目-コンテナ */
@@ -117,11 +117,11 @@ export default {
   width: auto;
   width: auto;
   height: 25px;
-  font-size: 14px;
+  font-size: 1rem;
 }
 
 /* 検索ボタン */
-.search-record-button {
+.search-button {
   margin: 15px;
   display       : inline-block;
   text-align    : center;      /* 文字位置   */
@@ -129,6 +129,7 @@ export default {
   padding       : 6px 12px;   /* 余白       */
   background    : #007fff;     /* 背景色     */
   color         : #ffffff;     /* 文字色     */
+  font-size: 1rem;             /* フォントサイズ */;
   line-height   : 1em;         /* 1行の高さ  */
   transition    : .3s;         /* なめらか変化 */
   border        : 2px solid #007fff;    /* 枠の指定 */

@@ -3,7 +3,7 @@
     <div class="header">
       <record-header></record-header>
     </div>
-    <main class="content">
+    <main class="main">
       <keep-alive>
         <router-view></router-view>
       </keep-alive>
@@ -35,11 +35,11 @@ export default {
   text-align: center;
   color: #2c3e50;
   min-height: 100vh; /* 画面の高さを最低限100vhに設定 */
-  display: flex;
+  display: flex; /* .header .main .fotterがFlexとして扱われる */
   flex-direction: column;
 }
-.content {
-  flex: 1; /* フッター部分以外を可変長にする */
+.main {
+  flex: 1; /* ヘッダー、フッター以外を可変長にする */
   padding-top: 5vh; /* 100vhに対して5vhの余白を追加 */;
   padding-bottom: 7vh; /* 100vhに対して7vhの余白を追加 */
 }
