@@ -87,7 +87,7 @@ export default {
 }
 .container {
   display: grid;
-  grid-template-columns: 1fr 6fr 3fr;
+  grid-template-columns: 1fr 7fr 2fr;
   border-bottom: 1px solid black;
   align-items: center;
   padding: 2%;
@@ -101,12 +101,14 @@ export default {
 .menu-name {
   text-align: center;
   grid-column: 2/3;
+  padding-left: 0.5rem;
 }
 .set-count {
   grid-column: 3/4;
 }
 .set-detail {
   grid-column: 3/4;
+  text-align: right;
 }
 .note {
   font-size: 10px;

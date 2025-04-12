@@ -65,6 +65,11 @@ export const fetchRecords = async () => {
   }
 };
 
+/**
+ * 入力したデータを登録する関数
+ * @param {*} formDataList 記録リスト
+ * @returns 
+ */
 export const postRecordData = async (formDataList) => {
   for (const item of formDataList) {
     let formData = new FormData();

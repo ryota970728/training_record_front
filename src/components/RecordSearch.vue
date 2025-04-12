@@ -21,7 +21,7 @@
     </div>
 
     <div class="search-wrapper">
-      <div>{{ searchPartName }}</div>
+      <div>{{ searchPartName }} {{ searchNumberStr }}</div>
       <div v-for="record in filterRecordList" :key="record.record_id" class="search-container">
         {{ record.create_date }} ({{ getDayOffWeek(record.create_date) }})
         <div class="set-detail">
@@ -47,6 +47,8 @@ export default {
       recordList: [],
       searchPartName: '',
       filterRecordList:[],
+      searchNumber: 0,
+      searchNumberStr: '',
     }
   },
   mounted() {
@@ -78,6 +80,8 @@ export default {
         // 日付でソート（降順）
         return new Date(b.create_date) - new Date(a.create_date)
       });
+      this.searchNumber = this.filterRecordList.length;
+      this.searchNumberStr = '：' + this.searchNumber + '件';
     },
     getDayOffWeek(dateString) {
       const date = new Date(dateString);
@@ -147,8 +151,8 @@ export default {
 .search-container {
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 2%;
+  justify-content: space-between;
+  padding: 0.5rem 2rem;
   border-bottom: 1px solid black;
   gap: 20%;
 }
