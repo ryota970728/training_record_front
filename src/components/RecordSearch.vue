@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="record-search">
     <!-- ローディング表示を追加 -->
     <progress-circular v-if="isLoading"></progress-circular>
     <!-- 部位 -->
@@ -22,6 +23,7 @@
       <button @click="searchRecordData" class="search-button">検索</button>
     </div>
 
+    </div>
     <div class="search-wrapper">
       <div>{{ searchPartName }} {{ searchNumberStr }}</div>
       <div v-for="record in filterRecordList" :key="record.record_id" class="search-container">
@@ -131,6 +133,12 @@ export default {
 </script>
 
 <style scoped>
+.record-search {
+  padding: 10px;
+  border: solid 0.1rem rgb(0,0,0,0.2);
+  border-radius: 2%;
+  margin: 1rem;
+}
 /* 部位-コンテナ */
 .radio-container {
   display: flex;
@@ -190,5 +198,8 @@ export default {
   padding: 0.5rem 2rem;
   border-bottom: 1px solid black;
   gap: 20%;
+}
+.set-detail {
+  text-align: right;
 }
 </style>
