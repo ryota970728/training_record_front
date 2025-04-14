@@ -18,6 +18,12 @@
         <div class="title-text">検索</div>
       </router-link>
     </div>
+    <div class="fotter-item menu-item">
+      <router-link to="/menu">
+        <div class="link-img menu-img"></div>
+        <div class="title-text">メニュー</div>
+      </router-link>
+    </div>
   </div>
 </template>
 
@@ -69,5 +75,9 @@ export default {
 /** 記録検索 */
 .search-img {
   background-image: url('@/assets/search.png');
+}
+/** メニュー */
+.menu-img {
+  background-image: url('@/assets/menu.png');
 }
 </style>

@@ -200,6 +200,7 @@ export default {
   width: auto;
   height: 25px;
   font-size: 1rem;
+  text-align: center;
 }
 
 /* セット数-コンテナ */

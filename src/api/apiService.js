@@ -75,3 +75,21 @@ export const postRecordData = async (formDataList) => {
     }
   }
 }
+
+export const postMenuData = async (partId, menuName) => {
+  let formData = new FormData();
+  formData.append('partId', JSON.stringify(partId));
+  formData.append('menuName', JSON.stringify(menuName));
+  try{
+    await axios.post(FUNCTIONS_URL.POST_MENU, formData, {
+      headers :{
+        Authorization: FUNCTIONS_URL.AUTHORIZATION,
+        "Content-Type": "application/json",
+      }
+    });
+    return true;
+  }catch(error){
+    console.log("error:", error);
+    return false;
+  }
+}

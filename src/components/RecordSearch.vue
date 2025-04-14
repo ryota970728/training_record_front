@@ -161,6 +161,7 @@ export default {
   width: auto;
   height: 25px;
   font-size: 1rem;
+  text-align: center;
 }
 
 /* 検索ボタン */

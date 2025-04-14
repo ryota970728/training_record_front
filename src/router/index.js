@@ -4,6 +4,7 @@ import VueRouter from 'vue-router';
 import RecordHome from '../components/RecordHome.vue';
 import RecordConfirm from '../components/RecordConfirm.vue';
 import RecordSearch from '../components/RecordSearch.vue';
+import MenuManager from '@/components/MenuManager.vue';
 
 
 // routerをVueインスタンス全体で使用できるようにプラグインの設定
@@ -32,6 +33,12 @@ const routes = [
     component: RecordSearch,
     meta: {title: '記録検索'}
   },
+  {
+    path: '/menu',
+    name: 'MenuManager',
+    component: MenuManager,
+    meta: {title: 'メニュー管理'}
+  }
 ];
 
 const router = new VueRouter({
