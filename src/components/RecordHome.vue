@@ -1,13 +1,12 @@
 <template>
   <div class="record-home">
+    <progress-circular v-if="isLoading"></progress-circular>
     <div class="date">
       <input class="input-date" type="date" v-model="createDate">
     </div>
     <div v-for="(record, index) in recordLists" :key="index">
       <record-detail
       :createDate=createDate
-      :partList="partList"
-      :menuList="menuList"
       ref="child"
       @update-array="handleArrayUpdate"
       ></record-detail>
@@ -22,7 +21,6 @@
       <button class="submit-button" @click="sendConfirm">送信</button>
     </div>
     <record-modal v-show="isShowModal" v-on:cancel="stopModal" v-on:ok="okModal"></record-modal>
-    <progress-circular v-if="isLoading"></progress-circular>
   </div>
 </template>
 
@@ -30,6 +28,7 @@
 import RecordDetail from './RecordDetail.vue';
 import RecordModal from './common/RecordModal.vue';
 import ProgressCircular from './common/ProgressCircular.vue';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: "RecordHome",
@@ -56,10 +55,37 @@ export default {
       isShowModal: false,
     }
   },
-  mounted() {
-    this.fetchData();
+  created() {
+    // コンポーネントが作成されたときに初期データをロード
+    this.loadinitialData();
+  },
+  computed: {
+    // mapGettersでヘルパーを使ってストアの state をローカルの computed プロパティにマッピング
+    ...mapGetters(['getPartList', 'getMenuList']),
   },
   methods: {
+    // API通信
+    ...mapActions(['fetchPartList', 'fetchMenuList', 'fetchRecordList']),
+
+    // 初期データのロード
+    async loadinitialData() {
+      if (this.getPartList.length === 0 || this.getMenuList.length === 0) {
+        this.isLoading = true; // ローディング開始を追加しても良い
+        try {
+          // Promise.allで並行してデータを取得
+          await Promise.all([
+            this.fetchPartList(),
+            this.fetchMenuList(),
+            this.fetchRecordList(),
+          ]);
+        } catch (error) {
+          console.error(error);
+          // エラー表示など
+        } finally {
+          this.isLoading = false; // ローディング終了
+        }
+      }
+    },
     // レコードを追加
     addRecord() {
       this.recordLists.push(this.recordLists.length + 1);
@@ -127,30 +153,22 @@ export default {
     async okModal() {
       // ローディング開始
       this.isLoading = true;
-
       // モーダルを非表示
       this.isShowModal = false;
-
       // 送信処理
       const isSuccess = await this.$apiService.postRecordData(this.formDataList);
-
       // ローディング停止
       this.isLoading = false;
 
       if (isSuccess) {
         // 送信成功
         this.clearRecordData(); // 入力データや変数の初期化
-        this.recordList = await this.$apiService.fetchRecords(); // 記録一覧取得
+        this.fetchRecordList(); // ストアの記録リストを更新
+        alert("送信に成功しました。");
       }else{
         // 送信失敗
         alert("送信に失敗しました。");
       }
-    },
-    // API通信
-    async fetchData() {
-      this.partList = await this.$apiService.fetchPart();
-      this.menuList = await this.$apiService.fetchMenu();
-      this.recordList = await this.$apiService.fetchRecords();
     },
   }
 }

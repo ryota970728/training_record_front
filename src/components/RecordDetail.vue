@@ -2,7 +2,7 @@
   <div class="record-detail">
     <!-- 部位 -->
     <div class="part-container">
-      <label v-for="part in partList" :key="part.part_id" class="radio-part">
+      <label v-for="part in getPartList" :key="part.part_id" class="radio-part">
         <input type="radio" v-model="selectedPart" :value="part.part_id">
         {{ part.part_name }}
       </label>
@@ -32,12 +32,12 @@
     <div class="note-container">
       <textarea v-model="note" class="textarea-note"></textarea>
     </div>
-
   </div>
 </template>
 
 <script>
 import WeightSets from "./WeightSets.vue";
+import { mapGetters } from 'vuex';
 
 export default {
   name: "RecordDetail",
@@ -46,8 +46,6 @@ export default {
   },
   props: {
     createDate: String,
-    partList: Array,
-    menuList: Array,
   },
   data() {
     return {
@@ -77,9 +75,12 @@ export default {
     }
   },
   computed: {
+    // mapGettersでヘルパーを使ってストアの state をローカルの computed プロパティにマッピング
+    ...mapGetters(['getPartList', 'getMenuList', 'getRecordList']),
+
     // 選択された部位に紐づくメニューリストを返す
     filteredMenuList() {
-      return this.menuList.filter(menu => menu.part_id === this.selectedPart);
+      return this.getMenuList.filter(menu => menu.part_id === this.selectedPart);
     },
   },
   methods: {
@@ -154,7 +155,7 @@ export default {
           child.clearWeightSetslData();
         }
       });
-    }
+    },
   }
 }
 </script>

@@ -1,8 +1,10 @@
 <template>
   <div>
+    <!-- ローディング表示を追加 -->
+    <progress-circular v-if="isLoading"></progress-circular>
     <!-- 部位 -->
     <div class="radio-container">
-      <label v-for="part in partList" :key="part.part_id" class="radio-part">
+      <label v-for="part in getPartList" :key="part.part_id" class="radio-part">
         <input type="radio" v-model="selectedPart" :value="part.part_id">
         {{ part.part_name }}
       </label>
@@ -35,35 +37,67 @@
 </template>
 
 <script>
+import ProgressCircular from './common/ProgressCircular.vue';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'RecordSearch',
+  components: {
+    ProgressCircular, // ローディングコンポーネントを登録
+  },
   data() {
     return {
-      partList: [],
-      menuList: [],
+      // ラジオボタンで選択された部位ID（デフォルトあり）
       selectedPart: 1,
+      // プルダウンで選択された種目名
       selectedMenu: '',
-      recordList: [],
+      // 検索条件(部位)
       searchPartName: '',
+      // 検索結果
       filterRecordList:[],
+      // 検索件数
       searchNumber: 0,
+      // 検索件数の文字列
       searchNumberStr: '',
+      // ローディング状態
+      isLoading: false,
     }
   },
-  mounted() {
-    // セッションストレージから値を取得する
-    this.partList = JSON.parse(sessionStorage.getItem('partList'));
-    this.menuList = JSON.parse(sessionStorage.getItem('menuList'));
-    this.recordList = JSON.parse(sessionStorage.getItem('recordList'));
+  created() {
+    this.loadRecordsIfNeeded();
   },
   computed: {
+    // mapGettersでヘルパーを使ってストアの state をローカルの computed プロパティにマッピング
+    ...mapGetters(['getPartList', 'getMenuList', 'getRecordList']),
+
     // 選択された部位に紐づくメニューリストを返す
     filteredMenuList() {
-      return this.menuList.filter(menu => menu.part_id === this.selectedPart);
+      return this.getMenuList.filter(menu => menu.part_id === this.selectedPart);
     },
   },
   methods: {
+    // API通信
+    ...mapActions(['fetchPartList', 'fetchMenuList', 'fetchRecordList']),
+
+    // データ取得処理をメソッド化
+    async loadRecordsIfNeeded() {
+      // ストアのリストが空の場合のみデータを取得
+      if (this.getRecordList.length === 0) {
+        this.isLoading = true;
+        try {
+          // Promise.allで並行してデータを取得
+          await Promise.all([
+          this.fetchPartList(),
+          this.fetchMenuList(),
+          this.fetchRecordList(),
+        ]);
+        } catch (error) {
+          console.error("RecordConfirm: Error fetching record list:", error);
+        } finally {
+          this.isLoading = false;
+        }
+      }
+    },
     searchRecordData() {
       if (!this.selectedMenu) {
         // プルダウンに値がセットされているか確認
@@ -72,7 +106,7 @@ export default {
       }
       // 選択した条件に応じて検索する
       this.searchPartName = this.selectedMenu;
-      this.filterRecordList = this.recordList.filter(record => {
+      this.filterRecordList = this.getRecordList.filter(record => {
         // 選択された種目でフィルタリング
         return this.selectedMenu == record.menu_master.menu_name;
       })
