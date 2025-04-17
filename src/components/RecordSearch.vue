@@ -27,7 +27,10 @@
     <div class="search-wrapper">
       <div>{{ searchPartName }} {{ searchNumberStr }}</div>
       <div v-for="record in filterRecordList" :key="record.record_id" class="search-container">
-        {{ record.create_date }} ({{ getDayOffWeek(record.create_date) }})
+        <div class="create-date">
+          {{ record.create_date }} ({{ getDayOffWeek(record.create_date) }})
+        </div>
+        <div class="note">{{ record.note }}</div>
         <div class="set-detail">
           <div v-for="(sets, index) in record.set_detail" :key="index">
             {{ sets.weight }} x {{ sets.reps }}
@@ -191,15 +194,32 @@ export default {
 .search-wrapper {
   padding: 5%;
 }
+/* 検索一覧コンテナ */
 .search-container {
-  display: flex;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
   align-items: center;
-  justify-content: space-between;
   padding: 0.5rem 2rem;
   border-bottom: 1px solid black;
-  gap: 20%;
 }
+/* 日付 */
+.create-date {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  text-align: left;
+}
+/* 備考 */
+.note {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+  text-align: left;
+  font-size: 0.8rem;
+
+}
+/* セット詳細 */
 .set-detail {
   text-align: right;
+  grid-column: 2 / 3;
+  grid-row: 1 / 3;
 }
 </style>
