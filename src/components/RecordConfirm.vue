@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-for="(item, index) in sortedFilteredRecords" :key="index" class="record">
-      <div class="create-date">{{ item.create_date }} ({{ getDayOffWeek(item.create_date) }})</div>
+      <div class="create-date">{{ item.create_date }} ({{ $dateUtils.getDayOfWeek(item.create_date) }})</div>
       <div v-for="record in item.records" :key="record.record_id" class="container">
         <div class="part-name" :style="{background: record.part_color, color: '#FFFFFF'}">{{ record.part_name }}</div>
         <div class="menu-name">{{ record.menu_name }}</div>
@@ -59,16 +59,6 @@ export default {
     },
   },
   methods: {
-    // 曜日を取得
-    getDayOffWeek(dateString) {
-      const date = new Date(dateString);
-      // 曜日の配列
-      const dayOfWeekStr = ["日", "月", "火", "水", "木", "金", "土"];
-      // 曜日を取得
-      const dayOfWeek = date.getDay();
-      // 曜日を返す
-      return dayOfWeekStr[dayOfWeek];
-    },
     checkNote(note) {
       return note !== "";
     },

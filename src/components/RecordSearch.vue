@@ -26,7 +26,7 @@
       <div>{{ searchPartName }} {{ searchNumberStr }}</div>
       <div v-for="record in filterRecordList" :key="record.record_id" class="search-container">
         <div class="create-date">
-          {{ record.create_date }} ({{ getDayOffWeek(record.create_date) }})
+          {{ record.create_date }} ({{ $dateUtils.getDayOfWeek(record.create_date) }})
         </div>
         <div class="note">{{ record.note }}</div>
         <div class="set-detail">
@@ -88,15 +88,6 @@ export default {
       });
       this.searchNumber = this.filterRecordList.length;
       this.searchNumberStr = '：' + this.searchNumber + '件';
-    },
-    getDayOffWeek(dateString) {
-      const date = new Date(dateString);
-      // 曜日の配列
-      const dayOfWeekStr = ["日", "月", "火", "水", "木", "金", "土"];
-      // 曜日を取得
-      const dayOfWeek = date.getDay();
-      // 曜日を返す
-      return dayOfWeekStr[dayOfWeek];
     },
   },
 }
