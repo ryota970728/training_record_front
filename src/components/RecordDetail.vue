@@ -75,8 +75,8 @@ export default {
     }
   },
   computed: {
-    // mapGettersでヘルパーを使ってストアの state をローカルの computed プロパティにマッピング
-    ...mapGetters(['getPartList', 'getMenuList', 'getRecordList']),
+    // ストアのゲッターをマッピング
+    ...mapGetters(['getPartList', 'getMenuList']),
 
     // 選択された部位に紐づくメニューリストを返す
     filteredMenuList() {

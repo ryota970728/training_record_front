@@ -1,29 +1,27 @@
 <template>
   <div>
     <div class="record-search">
-    <!-- ローディング表示を追加 -->
-    <progress-circular v-if="isLoading"></progress-circular>
-    <!-- 部位 -->
-    <div class="radio-container">
-      <label v-for="part in getPartList" :key="part.part_id" class="radio-part">
-        <input type="radio" v-model="selectedPart" :value="part.part_id">
-        {{ part.part_name }}
-      </label>
-    </div>
-    <!-- 種目 -->
-    <div class="select-container">
-       <select v-model="selectedMenu" class="select-menu">
-        <option disabled value="">選択してください</option>
-        <option v-for="menu in filteredMenuList" :key="menu.menu_id" :value="menu.menu_name">
-          {{ menu.menu_name }}
-        </option>
-       </select>
-    </div>
-    <div>
-      <button @click="searchRecordData" class="search-button">検索</button>
+      <!-- 部位 -->
+      <div class="radio-container">
+        <label v-for="part in getPartList" :key="part.part_id" class="radio-part">
+          <input type="radio" v-model="selectedPart" :value="part.part_id">
+          {{ part.part_name }}
+        </label>
+      </div>
+      <!-- 種目 -->
+      <div class="select-container">
+        <select v-model="selectedMenu" class="select-menu">
+          <option disabled value="">選択してください</option>
+          <option v-for="menu in filteredMenuList" :key="menu.menu_id" :value="menu.menu_name">
+            {{ menu.menu_name }}
+          </option>
+        </select>
+      </div>
+      <div>
+        <button @click="searchRecordData" class="search-button">検索</button>
+      </div>
     </div>
 
-    </div>
     <div class="search-wrapper">
       <div>{{ searchPartName }} {{ searchNumberStr }}</div>
       <div v-for="record in filterRecordList" :key="record.record_id" class="search-container">
@@ -42,14 +40,10 @@
 </template>
 
 <script>
-import ProgressCircular from './common/ProgressCircular.vue';
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'RecordSearch',
-  components: {
-    ProgressCircular, // ローディングコンポーネントを登録
-  },
   data() {
     return {
       // ラジオボタンで選択された部位ID（デフォルトあり）
@@ -64,15 +58,10 @@ export default {
       searchNumber: 0,
       // 検索件数の文字列
       searchNumberStr: '',
-      // ローディング状態
-      isLoading: false,
     }
   },
-  created() {
-    this.loadRecordsIfNeeded();
-  },
   computed: {
-    // mapGettersでヘルパーを使ってストアの state をローカルの computed プロパティにマッピング
+    // ストアのゲッターをマッピング
     ...mapGetters(['getPartList', 'getMenuList', 'getRecordList']),
 
     // 選択された部位に紐づくメニューリストを返す
@@ -81,28 +70,6 @@ export default {
     },
   },
   methods: {
-    // API通信
-    ...mapActions(['fetchPartList', 'fetchMenuList', 'fetchRecordList']),
-
-    // データ取得処理をメソッド化
-    async loadRecordsIfNeeded() {
-      // ストアのリストが空の場合のみデータを取得
-      if (this.getRecordList.length === 0) {
-        this.isLoading = true;
-        try {
-          // Promise.allで並行してデータを取得
-          await Promise.all([
-          this.fetchPartList(),
-          this.fetchMenuList(),
-          this.fetchRecordList(),
-        ]);
-        } catch (error) {
-          console.error("RecordConfirm: Error fetching record list:", error);
-        } finally {
-          this.isLoading = false;
-        }
-      }
-    },
     searchRecordData() {
       if (!this.selectedMenu) {
         // プルダウンに値がセットされているか確認

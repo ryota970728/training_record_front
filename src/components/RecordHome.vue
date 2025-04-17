@@ -28,7 +28,7 @@
 import RecordDetail from './RecordDetail.vue';
 import RecordModal from './common/RecordModal.vue';
 import ProgressCircular from './common/ProgressCircular.vue';
-import { mapGetters, mapActions } from 'vuex';
+import { mapActions } from 'vuex';
 
 export default {
   name: "RecordHome",
@@ -45,47 +45,16 @@ export default {
       recordLists: [1],
       // フォームデータのリスト
       formDataList: [],
-      // 部位の一覧
-      partList: [],
-      // 種目の一覧
-      menuList: [],
       // ローディング状態
       isLoading: false,
       // モーダル制御
       isShowModal: false,
     }
   },
-  created() {
-    // コンポーネントが作成されたときに初期データをロード
-    this.loadinitialData();
-  },
-  computed: {
-    // mapGettersでヘルパーを使ってストアの state をローカルの computed プロパティにマッピング
-    ...mapGetters(['getPartList', 'getMenuList']),
-  },
   methods: {
-    // API通信
-    ...mapActions(['fetchPartList', 'fetchMenuList', 'fetchRecordList']),
+    // ストアのアクションをマッピング
+    ...mapActions(['fetchRecordList']),
 
-    // 初期データのロード
-    async loadinitialData() {
-      if (this.getPartList.length === 0 || this.getMenuList.length === 0) {
-        this.isLoading = true; // ローディング開始を追加しても良い
-        try {
-          // Promise.allで並行してデータを取得
-          await Promise.all([
-            this.fetchPartList(),
-            this.fetchMenuList(),
-            this.fetchRecordList(),
-          ]);
-        } catch (error) {
-          console.error(error);
-          // エラー表示など
-        } finally {
-          this.isLoading = false; // ローディング終了
-        }
-      }
-    },
     // レコードを追加
     addRecord() {
       this.recordLists.push(this.recordLists.length + 1);

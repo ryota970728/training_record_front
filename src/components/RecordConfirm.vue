@@ -1,7 +1,5 @@
 <template>
   <div>
-    <!-- ローディング表示を追加 -->
-    <progress-circular v-if="isLoading"></progress-circular>
     <div v-for="(item, index) in sortedFilteredRecords" :key="index" class="record">
       <div class="create-date">{{ item.create_date }} ({{ getDayOffWeek(item.create_date) }})</div>
       <div v-for="record in item.records" :key="record.record_id" class="container">
@@ -19,25 +17,12 @@
 </template>
 
 <script>
-import ProgressCircular from './common/ProgressCircular.vue';
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
   name: "RecordConfirm",
-  components: {
-    ProgressCircular, // ローディングコンポーネントを登録
-  },
-  data() {
-    return {
-      // ローディング状態
-      isLoading: false,
-    }
-  },
-  created() {
-    this.loadRecordsIfNeeded();
-  },
   computed: {
-    // mapGettersでヘルパーを使ってストアの state をローカルの computed プロパティにマッピング
+    // ストアのゲッターをマッピング
     ...mapGetters(['getRecordList']),
 
     // filteredRecordsをcreate_dateでグループ化
@@ -74,28 +59,6 @@ export default {
     },
   },
   methods: {
-    // API通信
-    ...mapActions(['fetchPartList', 'fetchMenuList', 'fetchRecordList']),
-
-    // データ取得処理をメソッド化
-    async loadRecordsIfNeeded() {
-      // ストアのリストが空の場合のみデータを取得
-      if (this.getRecordList.length === 0) {
-        this.isLoading = true;
-        try {
-          // Promise.allで並行してデータを取得
-          await Promise.all([
-          this.fetchPartList(),
-          this.fetchMenuList(),
-          this.fetchRecordList(),
-        ]);
-        } catch (error) {
-          console.error("RecordConfirm: Error fetching record list:", error);
-        } finally {
-          this.isLoading = false;
-        }
-      }
-    },
     // 曜日を取得
     getDayOffWeek(dateString) {
       const date = new Date(dateString);

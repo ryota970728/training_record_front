@@ -4,6 +4,7 @@
       <record-header></record-header>
     </div>
     <main class="main">
+      <progress-circular v-if="isInitializing" class="initializing-progress"></progress-circular>
       <keep-alive>
         <router-view></router-view>
       </keep-alive>
@@ -17,12 +18,53 @@
 <script>
 import RecordHeader from "./components/RecordHeader.vue";
 import RecordFooter from "./components/RecordFooter.vue";
+import ProgressCircular from './components/common/ProgressCircular.vue';
+import { mapActions, mapGetters } from 'vuex';
+
 
 export default {
   name: 'App',
   components: {
     RecordHeader,
     RecordFooter,
+    ProgressCircular,
+  },
+  data() {
+    return {
+      isInitializing: false,
+    }
+  },
+  created() {
+    this.loadinitialData();
+  },
+  computed: {
+    // ストアのゲッターをマッピング
+    ...mapGetters(['getPartList', 'getMenuList', 'getRecordList']),
+  },
+  methods: {
+    // ストアのアクションをマッピング
+    ...mapActions(['fetchPartList', 'fetchMenuList', 'fetchRecordList']),
+
+    // アプリケーション起動時に必要なデータをロード
+    async loadinitialData() {
+      // すでにデータがあればロードしない
+      if (this.getPartList.length === 0 || this.getMenuList.length === 0 || this.getRecordList.length === 0) {
+        this.isInitializing = true;
+        try {
+          // Promise.allで並行してデータを取得
+          await Promise.all([
+            this.fetchPartList(),
+            this.fetchMenuList(),
+            this.fetchRecordList(),
+          ]);
+        } catch (error) {
+          console.error("App.vue: Error initializing data:", error);
+          alert("データの初期化に失敗しました。");
+        } finally {
+          this.isInitializing = false;
+        }
+      }
+    }
   },
 }
 </script>

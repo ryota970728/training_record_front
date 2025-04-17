@@ -43,36 +43,14 @@ export default {
       isLoading: false,
     }
   },
-  created() {
-    this.loadRecordsIfNeeded();
-  },
   computed: {
-    // mapGettersでヘルパーを使ってストアの state をローカルの computed プロパティにマッピング
-    ...mapGetters(['getPartList', 'getMenuList', 'getRecordList']),
+    // Vuexのゲッターをマッピング
+    ...mapGetters(['getPartList']),
   },
   methods: {
-    // API通信
-    ...mapActions(['fetchPartList', 'fetchMenuList', 'fetchRecordList']),
+    // Vuexのアクションをマッピング
+    ...mapActions(['fetchMenuList']),
 
-    // データ取得処理をメソッド化
-    async loadRecordsIfNeeded() {
-      // ストアのリストが空の場合のみデータを取得
-      if (this.getPartList.length === 0 || this.getMenuList.length === 0) {
-        this.isLoading = true;
-        try {
-          // Promise.allで並行してデータを取得
-          await Promise.all([
-          this.fetchPartList(),
-          this.fetchMenuList(),
-          this.fetchRecordList(),
-        ]);
-        } catch (error) {
-          console.error("RecordConfirm: Error fetching record list:", error);
-        } finally {
-          this.isLoading = false;
-        }
-      }
-    },
     // メニュー登録
     async registMenu() {
       if (this.selectedPart > 0) {
