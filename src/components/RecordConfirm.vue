@@ -116,7 +116,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .record {
-  padding: 5%;
+  padding: 1rem;
   font-size: 14px;
 }
 .container {

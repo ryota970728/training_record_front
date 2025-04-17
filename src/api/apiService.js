@@ -68,12 +68,13 @@ export const postRecordData = async (formDataList) => {
           "Content-Type": "application/json",
         }
       });
-      return true;
     }catch(error){
       console.log("error:", error);
       return false;
     }
   }
+  // 処理が全て成功したらtrueを返却
+  return true;
 }
 
 export const postMenuData = async (partId, menuName) => {
