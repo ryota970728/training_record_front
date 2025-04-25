@@ -4,7 +4,7 @@
       <record-header></record-header>
     </div>
     <main class="main">
-      <progress-circular v-if="isInitializing" class="initializing-progress"></progress-circular>
+      <progress-circular v-if="isInitializing"></progress-circular>
       <keep-alive>
         <router-view></router-view>
       </keep-alive>
@@ -35,7 +35,7 @@ export default {
     }
   },
   created() {
-    this.loadinitialData();
+    this.loadInitialData();
   },
   computed: {
     // ストアのゲッターをマッピング
@@ -46,7 +46,7 @@ export default {
     ...mapActions(['fetchPartList', 'fetchMenuList', 'fetchRecordList']),
 
     // アプリケーション起動時に必要なデータをロード
-    async loadinitialData() {
+    async loadInitialData() {
       // すでにデータがあればロードしない
       if (this.getPartList.length === 0 || this.getMenuList.length === 0 || this.getRecordList.length === 0) {
         this.isInitializing = true;

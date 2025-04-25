@@ -1,15 +1,21 @@
 <template>
-  <div>
-    <div v-for="(item, index) in sortedFilteredRecords" :key="index" class="record">
+  <div class="record-confirm">
+    <!-- 記録一覧-->
+    <div v-for="(item, index) in sortedFilteredRecords" :key="index" class="record-list">
+      <!-- 日付 -->
       <div class="create-date">{{ item.create_date }} ({{ $dateUtils.getDayOfWeek(item.create_date) }})</div>
-      <div v-for="record in item.records" :key="record.record_id" class="container">
+      <div v-for="record in item.records" :key="record.record_id" class="record-item">
+        <!-- 部位 -->
         <div class="part-name" :style="{background: record.part_color, color: '#FFFFFF'}">{{ record.part_name }}</div>
+        <!-- 種目 -->
         <div class="menu-name">{{ record.menu_name }}</div>
+        <!-- セット詳細 -->
         <div class="set-detail">
           <div v-for="(sets, index) in record.set_detail" :key="index">
-          <div>{{ sets.weight }} x {{ sets.reps }}</div>
+            <div>{{ sets.weight }} x {{ sets.reps }}</div>
+          </div>
         </div>
-        </div>
+        <!-- 備考 -->
         <div v-if="checkNote(record.note)" class="note">{{ record.note }}</div>
       </div>
     </div>
@@ -66,37 +72,44 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.record {
+/* 記録一覧 */
+.record-list {
   padding: 1rem;
   font-size: 14px;
 }
-.container {
+/* 記録項目 */
+.record-item {
   display: grid;
   grid-template-columns: 1fr 7fr 2fr;
   border-bottom: 1px solid black;
   align-items: center;
   padding: 2%;
 }
+/* 日付 */
 .create-date {
   text-align: left;
 }
+/* 部位名 */
 .part-name {
   grid-column: 1/2;
 }
+/* 種目名 */
 .menu-name {
   text-align: center;
   grid-column: 2/3;
   padding-left: 0.5rem;
 }
+/* セット数 */
 .set-count {
   grid-column: 3/4;
 }
+/* セット詳細 */
 .set-detail {
   grid-column: 3/4;
   text-align: right;
 }
+/* 備考 */
 .note {
   font-size: 10px;
   grid-column: 2/3;

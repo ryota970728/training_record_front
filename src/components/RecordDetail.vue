@@ -2,14 +2,14 @@
   <div class="record-detail">
     <!-- 部位 -->
     <div class="part-container">
-      <label v-for="part in getPartList" :key="part.part_id" class="radio-part">
+      <label v-for="part in getPartList" :key="part.part_id" class="part-radio">
         <input type="radio" v-model="selectedPart" :value="part.part_id">
         {{ part.part_name }}
       </label>
     </div>
     <!-- 種目 -->
     <div class="menu-container">
-       <select v-model="selectedMenu" class="select-menu">
+       <select v-model="selectedMenu" class="menu-select">
         <option disabled value="">選択してください</option>
         <option v-for="menu in filteredMenuList" :key="menu.menu_id" :value="menu.menu_name">
           {{ menu.menu_name }}
@@ -18,10 +18,10 @@
     </div>
         <!-- セット数 -->
     <div class="set-count-container">
-      <label>セット数：</label><input class="set-count" type="number" v-model="setCount" @input="updateSets">
+      <label>セット数：</label><input class="set-count-input" type="number" v-model="setCount" @input="updateSets">
     </div>
     <!-- 重量と回数 -->
-    <div v-for="(value, index) in setCountList" :key="index" class="weight-sets-container">
+    <div v-for="(value, index) in setCountList" :key="index">
       <weight-sets
       @update-weight="updateWeight($event, index)"
       @update-reps="updateReps($event, index)"
@@ -30,7 +30,7 @@
     </div>
     <!-- 備考欄 -->
     <div class="note-container">
-      <textarea v-model="note" class="textarea-note"></textarea>
+      <textarea v-model="note" class="note-textarea"></textarea>
     </div>
   </div>
 </template>
@@ -181,7 +181,7 @@ export default {
 }
 
 /* 部位-ラジオボタン */
-.radio-part {
+.part-radio {
   display: flex;
   align-items: center;
   margin-bottom: 5px; /* ラベル間の下マージンを設定 */
@@ -195,7 +195,7 @@ export default {
 }
 
 /* 種目-ドロップダウン */
-.select-menu {
+.menu-select {
   width: auto;
   width: auto;
   height: 25px;
@@ -213,7 +213,7 @@ export default {
 }
 
 /* セット数-入力フィールド */
-.set-count{
+.set-count-input{
   width: 50px;
   font-size: 1.2rem;
 }
@@ -229,7 +229,7 @@ export default {
 }
 
 /* 備考-テキストエリア */
-.textarea-note {
+.note-textarea {
   font-size: 1rem;
 
 }

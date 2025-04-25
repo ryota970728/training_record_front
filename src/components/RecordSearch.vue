@@ -1,30 +1,33 @@
 <template>
-  <div>
-    <div class="record-search">
+  <div class="record-search">
+    <!-- 検索エリア -->
+    <div class="search-area-wrapper">
       <!-- 部位 -->
-      <div class="radio-container">
-        <label v-for="part in getPartList" :key="part.part_id" class="radio-part">
+      <div class="part-container">
+        <label v-for="part in getPartList" :key="part.part_id" class="part-radio">
           <input type="radio" v-model="selectedPart" :value="part.part_id">
           {{ part.part_name }}
         </label>
       </div>
       <!-- 種目 -->
-      <div class="select-container">
-        <select v-model="selectedMenu" class="select-menu">
+      <div class="menu-container">
+        <select v-model="selectedMenu" class="menu-select">
           <option disabled value="">選択してください</option>
           <option v-for="menu in filteredMenuList" :key="menu.menu_id" :value="menu.menu_name">
             {{ menu.menu_name }}
           </option>
         </select>
       </div>
+      <!-- 検索ボタン -->
       <div>
         <button @click="searchRecordData" class="search-button">検索</button>
       </div>
     </div>
 
-    <div class="search-wrapper">
+    <!-- 検索結果 -->
+    <div class="search-result-wrapper">
       <div>{{ searchPartName }} {{ searchNumberStr }}</div>
-      <div v-for="record in filterRecordList" :key="record.record_id" class="search-container">
+      <div v-for="record in filterRecordList" :key="record.record_id" class="search-result-container">
         <div class="create-date">
           {{ record.create_date }} ({{ $dateUtils.getDayOfWeek(record.create_date) }})
         </div>
@@ -93,15 +96,17 @@ export default {
 }
 </script>
 
+
 <style scoped>
-.record-search {
+/** 検索エリア */
+.search-area-wrapper {
   padding: 10px;
   border: solid 0.1rem rgb(0,0,0,0.2);
   border-radius: 2%;
   margin: 1rem;
 }
 /* 部位-コンテナ */
-.radio-container {
+.part-container {
   display: flex;
   flex-wrap: wrap; /* 子要素の折り返し設定 */
   justify-content: center; /* 水平方向の配置設定 */
@@ -111,7 +116,7 @@ export default {
 }
 
 /* 部位-ラジオボタン */
-.radio-part {
+.part-radio {
   display: flex;
   align-items: center;
   margin-bottom: 5px; /* ラベル間の下マージンを設定 */
@@ -119,13 +124,13 @@ export default {
 }
 
 /* 種目-コンテナ */
-.select-container {
+.menu-container {
   display: inline-block;
   margin: 5px;
 }
 
 /* 種目-ドロップダウン */
-.select-menu {
+.menu-select {
   width: auto;
   width: auto;
   height: 25px;
@@ -148,12 +153,12 @@ export default {
   border        : 2px solid #007fff;    /* 枠の指定 */
 }
 
-/** 検索一覧 */
-.search-wrapper {
+/** 検索結果一覧 */
+.search-result-wrapper {
   padding: 5%;
 }
-/* 検索一覧コンテナ */
-.search-container {
+/* 検索結果一覧コンテナ */
+.search-result-container {
   display: grid;
   grid-template-columns: 2fr 1fr;
   align-items: center;

@@ -1,23 +1,23 @@
 <template>
   <div>
-    <!-- ローディング表示を追加 -->
     <progress-circular v-if="isLoading"></progress-circular>
-    <div class="menu-manager">
+    <div class="menu-manager-container">
       <div class="title">メニュー追加</div>
-      <select v-model="selectedPartId" class="select-part">
+      <select v-model="selectedPartId" class="part-select">
         <option disabled value="">部位を選択してください</option>
         <option v-for="part in getPartList" :key="part.part_id" :value="part.part_id">
           {{ part.part_name }}
         </option>
       </select>
       <div>
-        <input v-model="inputMenuName" type="text" placeholder="追加するメニューを入力" class="input-menu">
+        <input v-model="inputMenuName" type="text" placeholder="追加するメニューを入力" class="menu-input">
       </div>
       <div>
         <button @click="registMenu" class="regist-button">登録</button>
       </div>
     </div>
-    <div class="menu-manager">
+
+    <div class="menu-manager-container">
       <div class="title">メニュー編集</div>
       <div class="title">※近日アップデート予定</div>
     </div>
@@ -83,7 +83,7 @@ export default {
 </script>
 
 <style scoped>
-.menu-manager {
+.menu-manager-container {
   padding: 10px;
   border: solid 0.1rem rgb(0,0,0,0.2);
   border-radius: 2%;
@@ -94,7 +94,7 @@ export default {
   font-weight: bold;
 }
 /* 部位-入力フィールド */
-.select-part {
+.part-select {
   width: auto;
   width: auto;
   height: 25px;
@@ -103,7 +103,7 @@ export default {
 }
 
 /* 種目-入力フィールド */
-.input-menu {
+.menu-input {
   font-size: 1rem;
   width: 80%;
   margin: 1rem;

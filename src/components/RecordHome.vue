@@ -1,9 +1,12 @@
 <template>
   <div class="record-home">
     <progress-circular v-if="isLoading"></progress-circular>
-    <div class="date">
-      <input class="input-date" type="date" v-model="createDate">
+    <record-modal v-show="isShowModal" v-on:cancel="stopModal" v-on:ok="okModal"></record-modal>
+    <!-- 日付 -->
+    <div>
+      <input class="create-date-input" type="date" v-model="createDate">
     </div>
+    <!-- 記録詳細 -->
     <div v-for="(record, index) in recordLists" :key="index">
       <record-detail
       :createDate=createDate
@@ -11,16 +14,18 @@
       @update-array="handleArrayUpdate"
       ></record-detail>
     </div>
+    <!-- 記録削除ボタン -->
     <div v-if="recordLists.length > 1">
       <button class="delete-button" @click="deleteRecord"></button>
     </div>
+    <!-- 記録追加ボタン -->
     <div>
       <button class="add-button" @click="addRecord"></button>
     </div>
+    <!-- 記録送信ボタン -->
     <div>
       <button class="submit-button" @click="sendConfirm">送信</button>
     </div>
-    <record-modal v-show="isShowModal" v-on:cancel="stopModal" v-on:ok="okModal"></record-modal>
   </div>
 </template>
 
@@ -175,7 +180,7 @@ export default {
   background-color: #f8f4e6;
 }
 
-/** 削除ボタン */
+/** 送信ボタン */
 .submit-button {
   margin: 15px;
   display       : inline-block;
@@ -192,7 +197,7 @@ export default {
 }
 
 /** 日付入力フィールド */
-.input-date {
+.create-date-input {
   font-size: 1rem;
 }
 </style>
