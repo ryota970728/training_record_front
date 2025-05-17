@@ -65,7 +65,7 @@ export default {
       }
       // 登録処理
       this.isLoading = true;
-      const isSuccess =await this.$apiService.postMenuData(this.selectedPartId, this.inputMenuName);
+      const isSuccess = await this.$apiService.postMenuData(this.selectedPartId, this.inputMenuName);
       this.isLoading = false;
       if (isSuccess) {
         // 登録成功

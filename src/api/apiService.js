@@ -94,3 +94,25 @@ export const postMenuData = async (partId, menuName) => {
     return false;
   }
 }
+
+/**
+ * 記録したレコードを削除する関数
+ * @param {*} recordId レコードID
+ * @returns 
+ */
+export const deleteRecordData = async (recordId) => {
+  let formData = new FormData();
+  formData.append('recordId', JSON.stringify(recordId));
+  try{
+    await axios.post(FUNCTIONS_URL.DELETE_RECORD, formData, {
+      headers :{
+        Authorization: FUNCTIONS_URL.AUTHORIZATION,
+        "Content-Type": "application/json",
+      }
+    });
+    return true;
+  }catch (error) {
+    console.log("error:", error);
+    return false;
+  }
+}

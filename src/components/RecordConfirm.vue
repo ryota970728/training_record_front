@@ -1,5 +1,8 @@
 <template>
   <div class="record-confirm">
+    <div class="delete-mode-button-container">
+      <button @click="deleteMode" class="delete-mode-button">{{isDeleteMode ? '削除解除' : '削除'}}</button>
+    </div>
     <!-- 記録一覧-->
     <div v-for="(item, index) in sortedFilteredRecords" :key="index" class="record-list">
       <!-- 日付 -->
@@ -17,16 +20,25 @@
         </div>
         <!-- 備考 -->
         <div v-if="checkNote(record.note)" class="note">{{ record.note }}</div>
+        <!-- 削除ボタン -->
+        <div v-if="isDeleteMode" class="delete-button-container">
+          <button @click="deleteRecord(record.record_id)" class="delete-record-button">削除</button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: "RecordConfirm",
+  data() {
+    return {
+      isDeleteMode: false, // 削除モードのフラグ
+    }
+  },
   computed: {
     // ストアのゲッターをマッピング
     ...mapGetters(['getRecordList']),
@@ -65,8 +77,32 @@ export default {
     },
   },
   methods: {
+    // ストアのアクションをマッピング
+    ...mapActions(['fetchRecordList']),
+
     checkNote(note) {
       return note !== "";
+    },
+    // 削除モード
+    deleteMode() {
+      this.isDeleteMode = !this.isDeleteMode;
+    },
+    // レコード削除
+    async deleteRecord(recordId) {
+      // モーダルを表示させる
+      if(!confirm("本当に削除しますか？")){
+        return;
+      }
+      // 削除処理
+      const isSuccess = await this.$apiService.deleteRecordData(recordId);
+      if (isSuccess) {
+        // 削除成功
+        alert("削除に成功しました。");
+        this.fetchRecordList(); // ストアの記録リストを更新
+      }else{
+        // 削除失敗
+        alert("削除に失敗しました。");
+      }
     },
   },
 };
@@ -81,7 +117,7 @@ export default {
 /* 記録項目 */
 .record-item {
   display: grid;
-  grid-template-columns: 1fr 7fr 2fr;
+  grid-template-columns: v-bind("isDeleteMode ? '1fr 7fr auto auto' : '1fr 7fr auto'");
   border-bottom: 1px solid black;
   align-items: center;
   padding: 2%;
@@ -113,5 +149,30 @@ export default {
 .note {
   font-size: 10px;
   grid-column: 2/3;
+}
+/* 削除ボタン-コンテナ */
+.delete-button-container {
+  grid-column: 4/5;
+  grid-row: 1/3;
+  text-align: right;
+  padding-left: 0.5rem;
+}
+/* 削除ボタン */
+.delete-record-button {
+  background: #ff0019;
+  color: #fff;
+  border: 2px solid #ff0019;
+}
+/* 削除モードボタン-コンテナ */
+.delete-mode-button-container {
+  padding-right: 1rem;
+  text-align: right;
+}
+/* 削除モードボタン */
+.delete-mode-button {
+  border: none;
+  background: none;
+  color: #007fff;
+  text-decoration: underline;
 }
 </style>
