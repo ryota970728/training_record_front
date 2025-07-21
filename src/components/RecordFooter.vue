@@ -24,6 +24,12 @@
         <div class="title-text">メニュー</div>
       </router-link>
     </div>
+    <div class="fotter-item menu-item">
+      <router-link to="/old-record">
+        <div class="link-img old-record-img"></div>
+        <div class="title-text">過去記録</div>
+      </router-link>
+    </div>
   </div>
 </template>
 
@@ -79,5 +85,9 @@ export default {
 /** メニュー */
 .menu-img {
   background-image: url('@/assets/menu.png');
+}
+/** 過去記録 */
+.old-record-img {
+  background-image: url('@/assets/oldRecord.png');
 }
 </style>

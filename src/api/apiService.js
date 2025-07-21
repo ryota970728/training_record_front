@@ -116,3 +116,54 @@ export const deleteRecordData = async (recordId) => {
     return false;
   }
 }
+
+/**
+ * 部位一覧を取得する関数
+ * @returns 
+ */
+export const fetchOldPart = async () => {
+  try {
+    const res = await axios.get(FUNCTIONS_URL.GET_OLD_PART,{
+      headers: {
+        Authorization: FUNCTIONS_URL.AUTHORIZATION,
+      },
+    })
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * 
+ * @returns 種目一覧を取得する関数
+ */
+export const fetchOldMenu = async () => {
+  try {
+    const res = await axios.get(FUNCTIONS_URL.GET_OLD_MENU,{
+      headers: {
+        Authorization: FUNCTIONS_URL.AUTHORIZATION,
+      },
+    })
+    return res.data;
+    } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * 記録一覧を取得する関数
+ * @returns 
+ */
+export const fetchOldRecords = async () => {
+  try {
+    const res = await axios.get(FUNCTIONS_URL.GET_OLD_RECORDS,{
+      headers: {
+        Authorization: FUNCTIONS_URL.AUTHORIZATION,
+      },
+    })
+    return res.data;
+    } catch (error) {
+    console.log(error);
+  }
+};
