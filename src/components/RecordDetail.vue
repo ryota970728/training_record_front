@@ -19,6 +19,7 @@
         <!-- セット数 -->
     <div class="set-count-container">
       <label>セット数：</label><input class="set-count-input" type="number" v-model="setCount" @input="updateSets">
+      <div class="copy-button" @click="copyRecordDetailDate">コピー</div>
     </div>
     <!-- 重量と回数 -->
     <div v-for="(value, index) in setCountList" :key="index">
@@ -101,12 +102,12 @@ export default {
     // 重量を更新
     updateWeight(newWeight, index) {
       // 特定のセットの重量を更新
-      this.weightList[index] = newWeight;
+      this.$set(this.weightList, index, newWeight);
     },
     // 回数を更新
     updateReps(newReps, index) {
       // 特定のセットの回数を更新
-      this.repsList[index] = newReps;
+      this.$set(this.repsList, index, newReps);
     },
     // 「送信」ボタンが押下された際に動く関数
     checkRecordDetailData() {
@@ -155,6 +156,39 @@ export default {
           child.clearWeightSetslData();
         }
       });
+    },
+    // 重量と回数を次のレコードにコピーする関数
+    copyRecordDetailDate(){
+      if (this.$refs.child.length == 0){
+        return;
+      }
+
+      // 重量と回数を繰り返すループする。
+      for (let i = 0; i < this.$refs.child.length; i++){
+        const waightRepsVal = this.$refs.child[i];
+        const weight = waightRepsVal.weight;
+        const reps = waightRepsVal.reps;
+
+        // 1セット目に値が入っていない場合はスキップする。
+        if (i == 0 && weight == '' && reps == ''){
+          return;
+        }
+
+        // 次にセット数がない場合は処理を終える。
+        if (i == this.$refs.child.length - 1){
+          return;
+        }
+        // 次のセットに値をコピーする。
+        if (this.$refs.child[i + 1].weight == '' && this.$refs.child[i + 1].reps == ''){
+          // 親コンポーネントのデータを更新して整合性を保ちます。
+          this.$set(this.weightList, i + 1, weight);
+          this.$set(this.repsList, i + 1, reps);
+          // 子コンポーネントの表示も更新します。
+          this.$refs.child[i + 1].weight = weight;
+          this.$refs.child[i + 1].reps = reps;
+          break;
+        }
+      }
     },
   }
 }
@@ -210,6 +244,11 @@ export default {
   align-items: center;
   margin: 5px;
   gap: 0.5rem;
+}
+
+/* コピーボタン */
+.copy-button {
+  text-decoration: underline;
 }
 
 /* セット数-入力フィールド */
