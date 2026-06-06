@@ -59,10 +59,12 @@ export const fetchRecords = async () => {
  */
 export const postRecordData = async (formDataList) => {
   for (const item of formDataList) {
-    let formData = new FormData();
-    formData.append('record', JSON.stringify(item));
     try{
-      await axios.post(FUNCTIONS_URL.POST_RECORD, formData, {
+      await axios.post(FUNCTIONS_URL.POST_RECORD, 
+        {
+          record: item
+        },
+        {
         headers :{
           Authorization: FUNCTIONS_URL.AUTHORIZATION,
           "Content-Type": "application/json",
